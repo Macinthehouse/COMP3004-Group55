@@ -7,7 +7,7 @@
 class InMemoryStorageManager;
 class Vendor;
 class MarketDate;
-class WaitlistController;   // ✅ ADDED
+class WaitlistController; 
 
 // ----------------------------
 // Booking Result Definitions
@@ -35,7 +35,7 @@ class BookingController {
 public:
     // Constructor with dependency injection
     BookingController(InMemoryStorageManager& storageManager,
-                      WaitlistController& waitlistController);  // ✅ MODIFIED
+                      WaitlistController& waitlistController); 
 
     // Book a stall for a vendor on a specific market date
     BookingResult bookStall(const std::string& vendorId,
@@ -47,7 +47,7 @@ public:
 
 private:
     InMemoryStorageManager& storage;  // Reference to in-memory data manager
-    WaitlistController& waitlistController;  // ✅ ADDED
+    WaitlistController& waitlistController;  
 };
 
 #endif // BOOKINGCONTROLLER_H
