@@ -19,10 +19,7 @@ SOURCES += \
     Booking.cpp \
     Notification.cpp \
     MarketDate.cpp \
-    Waitlist.cpp \
-    StartupUI.cpp \
-    VendorDashboardUI.cpp \
-    BookingUI.cpp
+    Waitlist.cpp
 
 # --------------------------------------------------
 # HEADERS
@@ -36,7 +33,4 @@ HEADERS += \
     Booking.h \
     Notification.h \
     MarketDate.h \
-    Waitlist.h \
-    StartupUI.h \
-    VendorDashboardUI.h \
-    BookingUI.h
+    Waitlist.h
