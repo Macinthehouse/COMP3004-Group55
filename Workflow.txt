@@ -1,6 +1,4 @@
-README.txt
 HintonMarket System Workflow Analysis
-=====================================
 
 ## SYSTEM OVERVIEW
 
@@ -119,8 +117,8 @@ Buttons:
 * Book Stall
 * Cancel Booking
 * View Waitlist
-* Refresh
-* Logout
+* Refresh      ((((((we said this will automatically update)
+* Logout ((((always there in very main page)))
 
 DASHBOARD → BOOK STALL
 
@@ -240,7 +238,7 @@ Popup:
 
 "You have been added to the waitlist."
 
-DASHBOARD → CANCEL BOOKING
+DASHBOARD → CANCEL BOOKING (((((follow the image i have sent in the group for the cancel booking)))
 
 User clicks:
 
