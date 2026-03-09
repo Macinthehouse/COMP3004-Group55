@@ -6,11 +6,9 @@
 #include <map>
 
 #include "VendorCategory.h"
-
-// Forward declarations
-class Vendor;
-class MarketDate;
-class Waitlist;
+#include "Vendor.h"
+#include "MarketDate.h"
+#include "Waitlist.h"
 
 // --------------------------------------------------
 // InMemoryStorageManager

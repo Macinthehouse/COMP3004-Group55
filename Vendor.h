@@ -3,11 +3,10 @@
 
 #include <string>
 #include <vector>
-#include "VendorCategory.h"
 
-// Forward declarations to avoid circular dependencies
-class Booking;
-class Notification;
+#include "VendorCategory.h"
+#include "Booking.h"
+#include "Notification.h"
 
 // --------------------------------------------------
 // Vendor Class
