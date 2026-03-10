@@ -4,6 +4,7 @@
 #include "InMemoryStorageManager.h"
 #include "BookingController.h"
 #include "WaitlistController.h"
+#include "LoginController.h"
 
 int main(int argc, char *argv[])
 {
@@ -42,6 +43,7 @@ int main(int argc, char *argv[])
     // ------------------------------------------------
     WaitlistController waitlistController(storage);
     BookingController bookingController(storage, waitlistController);
+    LoginController loginController(&storage);
 
     // ------------------------------------------------
     // Backend Ready
