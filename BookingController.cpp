@@ -1,6 +1,8 @@
 #include "BookingController.h"
+
 #include "InMemoryStorageManager.h"
 #include "WaitlistController.h"
+#include "User.h"
 #include "Vendor.h"
 #include "MarketDate.h"
 #include "Booking.h"
@@ -10,6 +12,7 @@
 // ---------------------------------------------
 // Constructor
 // ---------------------------------------------
+
 BookingController::BookingController(InMemoryStorageManager& storageManager,
                                      WaitlistController& waitlistCtrl)
     : storage(storageManager),
@@ -20,30 +23,38 @@ BookingController::BookingController(InMemoryStorageManager& storageManager,
 // ---------------------------------------------
 // bookStall()
 // ---------------------------------------------
-BookingResult BookingController::bookStall(const std::string& vendorId,
+
+BookingResult BookingController::bookStall(const std::string& userId,
                                            const std::string& marketDateId)
 {
-    // 1️⃣ Retrieve Vendor
-    Vendor* vendor = storage.getVendor(vendorId);
-    if (!vendor) {
-        return { BookingResultType::INVALID_VENDOR,
-                 "Vendor not found." };
+    // 1️⃣ Retrieve User
+    User* user = storage.getUser(userId);
+    if (!user) {
+        return { BookingResultType::INVALID_USER,
+                 "User not found." };
     }
 
-    // 2️⃣ Retrieve MarketDate
+    // 2️⃣ Ensure user is Vendor
+    Vendor* vendor = dynamic_cast<Vendor*>(user);
+    if (!vendor) {
+        return { BookingResultType::NOT_VENDOR,
+                 "Only vendors may book stalls." };
+    }
+
+    // 3️⃣ Retrieve MarketDate
     MarketDate* marketDate = storage.getMarketDate(marketDateId);
     if (!marketDate) {
         return { BookingResultType::INVALID_DATE,
                  "Market date not found." };
     }
 
-    // 3️⃣ Prevent duplicate booking
+    // 4️⃣ Prevent duplicate booking
     if (vendor->hasBookingForDate(marketDateId)) {
         return { BookingResultType::ALREADY_BOOKED,
                  "Vendor already has a booking for this date." };
     }
 
-    // 4️⃣ Check stall availability
+    // 5️⃣ Check stall availability
     VendorCategory category = vendor->getCategory();
 
     if (!marketDate->hasAvailableStall(category)) {
@@ -51,14 +62,13 @@ BookingResult BookingController::bookStall(const std::string& vendorId,
                  "No stalls available for this category." };
     }
 
-    // 5️⃣ Create Booking object
-    Booking booking(vendorId, marketDateId, category);
+    // 6️⃣ Create booking
+    Booking booking(userId, marketDateId, category);
 
-    // 6️⃣ Update MarketDate and Vendor
     marketDate->addBooking(booking);
     vendor->addBooking(booking);
 
-    // 7️⃣ Create confirmation notification
+    // 7️⃣ Confirmation notification
     Notification notification(
         "Booking confirmed for market date " + marketDateId
     );
@@ -72,37 +82,44 @@ BookingResult BookingController::bookStall(const std::string& vendorId,
 // ---------------------------------------------
 // cancelBooking()
 // ---------------------------------------------
-BookingResult BookingController::cancelBooking(const std::string& vendorId,
+
+BookingResult BookingController::cancelBooking(const std::string& userId,
                                                const std::string& marketDateId)
 {
-    // 1️⃣ Retrieve Vendor
-    Vendor* vendor = storage.getVendor(vendorId);
-    if (!vendor) {
-        return { BookingResultType::INVALID_VENDOR,
-                 "Vendor not found." };
+    // 1️⃣ Retrieve User
+    User* user = storage.getUser(userId);
+    if (!user) {
+        return { BookingResultType::INVALID_USER,
+                 "User not found." };
     }
 
-    // 2️⃣ Retrieve MarketDate
+    // 2️⃣ Ensure user is Vendor
+    Vendor* vendor = dynamic_cast<Vendor*>(user);
+    if (!vendor) {
+        return { BookingResultType::NOT_VENDOR,
+                 "Only vendors may cancel bookings." };
+    }
+
+    // 3️⃣ Retrieve MarketDate
     MarketDate* marketDate = storage.getMarketDate(marketDateId);
     if (!marketDate) {
         return { BookingResultType::INVALID_DATE,
                  "Market date not found." };
     }
 
-    // 3️⃣ Ensure booking exists
+    // 4️⃣ Ensure booking exists
     if (!vendor->hasBookingForDate(marketDateId)) {
         return { BookingResultType::ERROR,
                  "No booking found for this date." };
     }
 
-    // 4️⃣ Store category before removal (needed for waitlist promotion)
     VendorCategory category = vendor->getCategory();
 
-    // 5️⃣ Remove booking from both domain objects
-    marketDate->removeBooking(vendorId);
+    // 5️⃣ Remove booking
+    marketDate->removeBooking(userId);
     vendor->removeBooking(marketDateId);
 
-    // 6️⃣ Create cancellation notification
+    // 6️⃣ Cancellation notification
     Notification notification(
         "Booking cancelled for market date " + marketDateId
     );
