@@ -15,7 +15,11 @@ SOURCES += \
     BookingController.cpp \
     WaitlistController.cpp \
     InMemoryStorageManager.cpp \
+    User.cpp \
     Vendor.cpp \
+    MarketOperator.cpp \
+    SystemAdministrator.cpp \
+    ComplianceDocument.cpp \
     Booking.cpp \
     Notification.cpp \
     MarketDate.cpp \
@@ -32,7 +36,11 @@ HEADERS += \
     BookingController.h \
     WaitlistController.h \
     InMemoryStorageManager.h \
+    User.h \
     Vendor.h \
+    MarketOperator.h \
+    SystemAdministrator.h \
+    ComplianceDocument.h \
     VendorCategory.h \
     Booking.h \
     Notification.h \
