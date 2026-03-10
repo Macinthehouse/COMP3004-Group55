@@ -57,7 +57,7 @@ void InMemoryStorageManager::initializeDefaultData()
     // 2️⃣ Create Vendors (Polymorphic Storage)
     // --------------------------------------------------
 
-    users["food_vendor_1"] = std::make_unique<Vendor>(
+    users["food_vendor_1"] = std::unique_ptr<User>(new Vendor(
         "food_vendor_1",
         "Alice Smith",
         "alice@freshfarms.ca",
@@ -65,9 +65,9 @@ void InMemoryStorageManager::initializeDefaultData()
         "123 Farm Road",
         "Fresh Farms",
         VendorCategory::FOOD
-    );
+    ));
 
-    users["food_vendor_2"] = std::make_unique<Vendor>(
+    users["food_vendor_2"] = std::unique_ptr<User>(new Vendor(
         "food_vendor_2",
         "Bob Green",
         "bob@greengardens.ca",
@@ -75,9 +75,9 @@ void InMemoryStorageManager::initializeDefaultData()
         "456 Garden Ave",
         "Green Gardens",
         VendorCategory::FOOD
-    );
+    ));
 
-    users["food_vendor_3"] = std::make_unique<Vendor>(
+    users["food_vendor_3"] = std::unique_ptr<User>(new Vendor(
         "food_vendor_3",
         "Carol White",
         "carol@organic.ca",
@@ -85,9 +85,9 @@ void InMemoryStorageManager::initializeDefaultData()
         "789 Organic St",
         "Organic Delights",
         VendorCategory::FOOD
-    );
+    ));
 
-    users["food_vendor_4"] = std::make_unique<Vendor>(
+    users["food_vendor_4"] = std::unique_ptr<User>(new Vendor(
         "food_vendor_4",
         "David Brown",
         "david@harvest.ca",
@@ -95,9 +95,9 @@ void InMemoryStorageManager::initializeDefaultData()
         "101 Harvest Blvd",
         "Harvest Kitchen",
         VendorCategory::FOOD
-    );
+    ));
 
-    users["artisan_vendor_1"] = std::make_unique<Vendor>(
+    users["artisan_vendor_1"] = std::unique_ptr<User>(new Vendor(
         "artisan_vendor_1",
         "Emma Stone",
         "emma@crafts.ca",
@@ -105,9 +105,9 @@ void InMemoryStorageManager::initializeDefaultData()
         "12 Craft Lane",
         "Handmade Crafts",
         VendorCategory::ARTISAN
-    );
+    ));
 
-    users["artisan_vendor_2"] = std::make_unique<Vendor>(
+    users["artisan_vendor_2"] = std::unique_ptr<User>(new Vendor(
         "artisan_vendor_2",
         "Frank Miller",
         "frank@woodworks.ca",
@@ -115,9 +115,9 @@ void InMemoryStorageManager::initializeDefaultData()
         "34 Timber Rd",
         "WoodWorks",
         VendorCategory::ARTISAN
-    );
+    ));
 
-    users["artisan_vendor_3"] = std::make_unique<Vendor>(
+    users["artisan_vendor_3"] = std::unique_ptr<User>(new Vendor(
         "artisan_vendor_3",
         "Grace Lee",
         "grace@clay.ca",
@@ -125,9 +125,9 @@ void InMemoryStorageManager::initializeDefaultData()
         "56 Pottery Ave",
         "Clay Creations",
         VendorCategory::ARTISAN
-    );
+    ));
 
-    users["artisan_vendor_4"] = std::make_unique<Vendor>(
+    users["artisan_vendor_4"] = std::unique_ptr<User>(new Vendor(
         "artisan_vendor_4",
         "Henry Clark",
         "henry@designs.ca",
@@ -135,31 +135,31 @@ void InMemoryStorageManager::initializeDefaultData()
         "78 Design St",
         "Artisan Designs",
         VendorCategory::ARTISAN
-    );
+    ));
 
     // --------------------------------------------------
     // 3️⃣ Market Operator
     // --------------------------------------------------
 
-    users["market_operator"] = std::make_unique<MarketOperator>(
+    users["market_operator"] = std::unique_ptr<User>(new MarketOperator(
         "market_operator",
         "Market Admin",
         "operator@market.ca",
         "999-999-9999",
         "Market Office"
-    );
+    ));
 
     // --------------------------------------------------
     // 4️⃣ System Administrator
     // --------------------------------------------------
 
-    users["system_admin"] = std::make_unique<SystemAdministrator>(
+    users["system_admin"] = std::unique_ptr<User>(new SystemAdministrator(
         "system_admin",
         "System Admin",
         "admin@market.ca",
         "000-000-0000",
         "Admin Office"
-    );
+    ));
 
     // --------------------------------------------------
     // 5️⃣ Create Compliance Documents (Extended Legal Text)
