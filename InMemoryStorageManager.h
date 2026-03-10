@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <map>
 #include <memory>
+#include <vector>
 
 #include "User.h"
 #include "Vendor.h"
@@ -30,7 +31,7 @@
 
 class InMemoryStorageManager {
 public:
-    InMemoryStorageManager();
+    InMemoryStorageManager();   
 
     // ----------------------------
     // Initialization
@@ -54,6 +55,9 @@ public:
     // ----------------------------
     Waitlist* getWaitlist(const std::string& marketDateId,
                           VendorCategory category);
+    
+    // Return all the MarketDate objects
+    std::vector<MarketDate*> getAllMarketDates();
 
 private:
     // Polymorphic user storage

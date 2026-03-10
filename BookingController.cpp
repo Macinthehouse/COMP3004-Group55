@@ -20,6 +20,11 @@ BookingController::BookingController(InMemoryStorageManager& storageManager,
 {
 }
 
+std::vector<MarketDate*> BookingController::getAvailableMarketDates() {
+    // The Controller asks Storage for the list and hands it to the UI
+    return storage.getAllMarketDates(); 
+}
+
 // ---------------------------------------------
 // bookStall()
 // ---------------------------------------------

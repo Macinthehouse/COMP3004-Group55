@@ -254,3 +254,17 @@ Waitlist* InMemoryStorageManager::getWaitlist(const std::string& marketDateId,
 
     return (it != waitlists.end()) ? &(it->second) : nullptr;
 }
+
+// --------------------------------------------------
+// Iterate through your marketDates map and collect the pointers into a list.
+// --------------------------------------------------
+std::vector<MarketDate*> InMemoryStorageManager::getAllMarketDates() {
+    std::vector<MarketDate*> allDates;
+
+    // Use &dateObj to get the memory address (the pointer)
+    for (auto& [id, dateObj] : marketDates) {
+        allDates.push_back(&dateObj); 
+    }
+    
+    return allDates;
+}

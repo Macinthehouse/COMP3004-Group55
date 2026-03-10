@@ -2,6 +2,9 @@
 #define BOOKINGCONTROLLER_H
 
 #include <string>
+#include <vector>
+
+#include "MarketDate.h"
 
 // Forward declarations
 class InMemoryStorageManager;
@@ -43,6 +46,8 @@ public:
 
     BookingResult cancelBooking(const std::string& userId,
                                 const std::string& marketDateId);
+
+    std::vector<MarketDate*> getAvailableMarketDates();
 
 private:
     InMemoryStorageManager& storage;
