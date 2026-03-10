@@ -2,15 +2,17 @@
 #include "VendorCategory.h"
 #include "Booking.h"
 #include "Notification.h"
+#include "ComplianceDocument.h"
 
 // --------------------------------------------------
 // Default Constructor
 // --------------------------------------------------
-// Required for use in STL containers (e.g., unordered_map).
+// Required for use in STL containers.
 // --------------------------------------------------
 
 Vendor::Vendor()
-    : category(VendorCategory::FOOD) // Default category (can be overridden)
+    : User(),  // Call base class default constructor
+      category(VendorCategory::FOOD)
 {
 }
 
@@ -18,54 +20,42 @@ Vendor::Vendor()
 // Parameterized Constructor
 // --------------------------------------------------
 // Initializes a vendor with full business information.
+// Identity fields are initialized via User base class.
 // --------------------------------------------------
 
 Vendor::Vendor(const std::string& id,
-               const std::string& businessName,
                const std::string& ownerName,
                const std::string& email,
                const std::string& phone,
                const std::string& address,
+               const std::string& businessName,
                VendorCategory category)
-    : id(id),
+    : User(id, ownerName, email, phone, address),
       businessName(businessName),
-      ownerName(ownerName),
-      email(email),
-      phone(phone),
-      address(address),
       category(category)
 {
 }
 
 // --------------------------------------------------
-// Getters
+// Role Identification
 // --------------------------------------------------
 
-std::string Vendor::getId() const {
-    return id;
+std::string Vendor::getRoleName() const
+{
+    return "Vendor";
 }
 
-std::string Vendor::getBusinessName() const {
+// --------------------------------------------------
+// Vendor-Specific Getters
+// --------------------------------------------------
+
+std::string Vendor::getBusinessName() const
+{
     return businessName;
 }
 
-std::string Vendor::getOwnerName() const {
-    return ownerName;
-}
-
-std::string Vendor::getEmail() const {
-    return email;
-}
-
-std::string Vendor::getPhone() const {
-    return phone;
-}
-
-std::string Vendor::getAddress() const {
-    return address;
-}
-
-VendorCategory Vendor::getCategory() const {
+VendorCategory Vendor::getCategory() const
+{
     return category;
 }
 
@@ -85,7 +75,10 @@ bool Vendor::hasBookingForDate(const std::string& marketDateId) const
 
 void Vendor::addBooking(const Booking& booking)
 {
-    bookings.push_back(booking);
+    // Prevent duplicate booking for same date
+    if (!hasBookingForDate(booking.getMarketDateId())) {
+        bookings.push_back(booking);
+    }
 }
 
 void Vendor::removeBooking(const std::string& marketDateId)
@@ -93,7 +86,7 @@ void Vendor::removeBooking(const std::string& marketDateId)
     for (auto it = bookings.begin(); it != bookings.end(); ++it) {
         if (it->getMarketDateId() == marketDateId) {
             bookings.erase(it);
-            break; // Only one booking per date allowed
+            break;  // Only one booking per date allowed
         }
     }
 }
@@ -115,4 +108,18 @@ void Vendor::addNotification(const Notification& notification)
 const std::vector<Notification>& Vendor::getNotifications() const
 {
     return notifications;
+}
+
+// --------------------------------------------------
+// Compliance Management
+// --------------------------------------------------
+
+void Vendor::addComplianceDocument(const ComplianceDocument& document)
+{
+    complianceDocuments.push_back(document);
+}
+
+const std::vector<ComplianceDocument>& Vendor::getComplianceDocuments() const
+{
+    return complianceDocuments;
 }
