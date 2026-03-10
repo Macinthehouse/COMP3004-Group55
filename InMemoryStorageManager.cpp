@@ -1,5 +1,10 @@
 #include "InMemoryStorageManager.h"
 
+#include "Vendor.h"
+#include "MarketOperator.h"
+#include "SystemAdministrator.h"
+#include "ComplianceDocument.h"
+
 #include <vector>
 #include <utility>
 #include <memory>
@@ -155,6 +160,56 @@ void InMemoryStorageManager::initializeDefaultData()
         "000-000-0000",
         "Admin Office"
     );
+
+    // --------------------------------------------------
+    // 5️⃣ Create Compliance Documents (Extended Legal Text)
+    // --------------------------------------------------
+
+    ComplianceDocument foodLicense(
+        "Food Handling License",
+        "FH-2026-001",
+        "2027-12-31",
+        "This Food Handling License certifies that the vendor has completed "
+        "all required municipal and provincial food safety certification programs. "
+        "The vendor agrees to comply with all applicable public health regulations, "
+        "including but not limited to safe food storage temperatures, prevention of "
+        "cross-contamination, proper sanitation procedures, hygienic food preparation "
+        "standards, and use of approved food-grade equipment. Vendors must maintain "
+        "clean and sanitary preparation areas at all times and permit unannounced "
+        "inspections by authorized market personnel or public health officials. "
+        "Non-compliance may result in suspension, revocation of stall privileges, "
+        "financial penalties, or referral to governing health authorities."
+    );
+
+    ComplianceDocument liabilityInsurance(
+        "Liability Insurance Policy",
+        "LI-2026-034",
+        "2027-05-15",
+        "This Liability Insurance Policy confirms that the vendor maintains "
+        "active commercial general liability insurance coverage sufficient "
+        "to cover bodily injury, property damage, product liability claims, "
+        "and any other risk arising from stall operations. The vendor assumes "
+        "full legal and financial responsibility for any damages, losses, "
+        "injuries, or claims resulting from their products, employees, "
+        "equipment, or operational negligence. The HintonMarket organization "
+        "shall not be held liable for vendor misconduct or regulatory violations. "
+        "Proof of active insurance must be provided upon request and maintained "
+        "continuously throughout the market season."
+    );
+
+    // --------------------------------------------------
+    // 6️⃣ Attach Compliance Documents to All Vendors
+    // --------------------------------------------------
+
+    for (auto& pair : users) {
+
+        Vendor* vendor = dynamic_cast<Vendor*>(pair.second.get());
+
+        if (vendor) {
+            vendor->addComplianceDocument(foodLicense);
+            vendor->addComplianceDocument(liabilityInsurance);
+        }
+    }
 }
 
 // --------------------------------------------------
