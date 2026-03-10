@@ -4,9 +4,13 @@
 #include <string>
 #include <unordered_map>
 #include <map>
+#include <memory>
 
-#include "VendorCategory.h"
+#include "User.h"
 #include "Vendor.h"
+#include "MarketOperator.h"
+#include "SystemAdministrator.h"
+#include "VendorCategory.h"
 #include "MarketDate.h"
 #include "Waitlist.h"
 
@@ -15,7 +19,7 @@
 // --------------------------------------------------
 // Central in-memory storage for Deliverable 1.
 // Responsible for storing:
-// - Vendors
+// - Users (Vendor, MarketOperator, SystemAdministrator)
 // - MarketDates
 // - Waitlists
 //
@@ -34,9 +38,11 @@ public:
     void initializeDefaultData();
 
     // ----------------------------
-    // Vendor Access
+    // User Access
     // ----------------------------
-    Vendor* getVendor(const std::string& vendorId);
+    User* getUser(const std::string& userId);
+
+    Vendor* getVendor(const std::string& userId);
 
     // ----------------------------
     // MarketDate Access
@@ -50,8 +56,8 @@ public:
                           VendorCategory category);
 
 private:
-    // Vendors stored by vendorId
-    std::unordered_map<std::string, Vendor> vendors;
+    // Polymorphic user storage
+    std::unordered_map<std::string, std::unique_ptr<User>> users;
 
     // MarketDates stored by YYYY-MM-DD
     std::unordered_map<std::string, MarketDate> marketDates;
