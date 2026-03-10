@@ -1,6 +1,7 @@
 #include "WaitlistController.h"
 
 #include "InMemoryStorageManager.h"
+#include "User.h"
 #include "Vendor.h"
 #include "MarketDate.h"
 #include "Waitlist.h"
@@ -22,18 +23,25 @@ WaitlistController::WaitlistController(InMemoryStorageManager& storageManager)
 // joinWaitlist()
 // ---------------------------------------------
 
-WaitlistResult WaitlistController::joinWaitlist(const std::string& vendorId,
+WaitlistResult WaitlistController::joinWaitlist(const std::string& userId,
                                                 const std::string& marketDateId)
 {
-    // Retrieve Vendor
-    Vendor* vendor = storage.getVendor(vendorId);
-    if (!vendor) {
+    // Retrieve User
+    User* user = storage.getUser(userId);
+    if (!user) {
         return { WaitlistResultType::NOT_FOUND,
-                 "Vendor not found.",
+                 "User not found.",
                  -1 };
     }
 
-    // Retrieve MarketDate
+    // Ensure user is Vendor
+    Vendor* vendor = dynamic_cast<Vendor*>(user);
+    if (!vendor) {
+        return { WaitlistResultType::NOT_VENDOR,
+                 "Only vendors may join waitlists.",
+                 -1 };
+    }
+
     MarketDate* marketDate = storage.getMarketDate(marketDateId);
     if (!marketDate) {
         return { WaitlistResultType::NOT_FOUND,
@@ -43,21 +51,18 @@ WaitlistResult WaitlistController::joinWaitlist(const std::string& vendorId,
 
     VendorCategory category = vendor->getCategory();
 
-    // Prevent joining if already booked
     if (vendor->hasBookingForDate(marketDateId)) {
         return { WaitlistResultType::ALREADY_BOOKED,
                  "Vendor already booked for this date.",
                  -1 };
     }
 
-    // Only allow waitlist if market is FULL
     if (marketDate->hasAvailableStall(category)) {
         return { WaitlistResultType::MARKET_NOT_FULL,
                  "Stalls still available. Booking required instead.",
                  -1 };
     }
 
-    // Retrieve correct waitlist
     Waitlist* waitlist = storage.getWaitlist(marketDateId, category);
     if (!waitlist) {
         return { WaitlistResultType::ERROR,
@@ -65,18 +70,15 @@ WaitlistResult WaitlistController::joinWaitlist(const std::string& vendorId,
                  -1 };
     }
 
-    // Prevent duplicate waitlist entry
-    if (waitlist->containsVendor(vendorId)) {
+    if (waitlist->containsVendor(userId)) {
         return { WaitlistResultType::ALREADY_IN_WAITLIST,
                  "Vendor already in waitlist.",
                  -1 };
     }
 
-    // Add vendor to waitlist
-    waitlist->enqueue(vendorId);
-    int position = waitlist->getPosition(vendorId);
+    waitlist->enqueue(userId);
+    int position = waitlist->getPosition(userId);
 
-    // Add notification
     Notification notification(
         "You have been added to the waitlist for market date "
         + marketDateId +
@@ -95,13 +97,20 @@ WaitlistResult WaitlistController::joinWaitlist(const std::string& vendorId,
 // leaveWaitlist()
 // ---------------------------------------------
 
-WaitlistResult WaitlistController::leaveWaitlist(const std::string& vendorId,
+WaitlistResult WaitlistController::leaveWaitlist(const std::string& userId,
                                                  const std::string& marketDateId)
 {
-    Vendor* vendor = storage.getVendor(vendorId);
-    if (!vendor) {
+    User* user = storage.getUser(userId);
+    if (!user) {
         return { WaitlistResultType::NOT_FOUND,
-                 "Vendor not found.",
+                 "User not found.",
+                 -1 };
+    }
+
+    Vendor* vendor = dynamic_cast<Vendor*>(user);
+    if (!vendor) {
+        return { WaitlistResultType::NOT_VENDOR,
+                 "Only vendors may leave waitlists.",
                  -1 };
     }
 
@@ -121,13 +130,13 @@ WaitlistResult WaitlistController::leaveWaitlist(const std::string& vendorId,
                  -1 };
     }
 
-    if (!waitlist->containsVendor(vendorId)) {
+    if (!waitlist->containsVendor(userId)) {
         return { WaitlistResultType::NOT_FOUND,
                  "Vendor not in waitlist.",
                  -1 };
     }
 
-    waitlist->remove(vendorId);
+    waitlist->remove(userId);
 
     Notification notification(
         "You have been removed from the waitlist for market date "
@@ -145,8 +154,6 @@ WaitlistResult WaitlistController::leaveWaitlist(const std::string& vendorId,
 // ---------------------------------------------
 // handlePromotionIfNeeded()
 // ---------------------------------------------
-// Automatically completes booking when stall frees.
-// ---------------------------------------------
 
 void WaitlistController::handlePromotionIfNeeded(const std::string& marketDateId,
                                                  VendorCategory category)
@@ -154,29 +161,25 @@ void WaitlistController::handlePromotionIfNeeded(const std::string& marketDateId
     MarketDate* marketDate = storage.getMarketDate(marketDateId);
     if (!marketDate) return;
 
-    // Stall must be available
     if (!marketDate->hasAvailableStall(category)) return;
 
     Waitlist* waitlist = storage.getWaitlist(marketDateId, category);
     if (!waitlist || waitlist->isEmpty()) return;
 
-    // Remove next vendor (FIFO)
     std::string promotedVendorId = waitlist->dequeue();
     if (promotedVendorId.empty()) return;
 
-    Vendor* vendor = storage.getVendor(promotedVendorId);
+    User* user = storage.getUser(promotedVendorId);
+    Vendor* vendor = dynamic_cast<Vendor*>(user);
     if (!vendor) return;
 
-    // Safety check
     if (vendor->hasBookingForDate(marketDateId)) return;
 
-    // Create booking
     Booking booking(promotedVendorId, marketDateId, category);
 
     marketDate->addBooking(booking);
     vendor->addBooking(booking);
 
-    // Notify vendor of automatic booking
     Notification notification(
         "You have been automatically booked from the waitlist for market date "
         + marketDateId
