@@ -5,9 +5,7 @@
 
 // Forward declarations
 class InMemoryStorageManager;
-class Vendor;
-class MarketDate;
-class WaitlistController;   // ✅ ADDED
+class WaitlistController;
 
 // ----------------------------
 // Booking Result Definitions
@@ -17,8 +15,9 @@ enum class BookingResultType {
     SUCCESS,
     MARKET_FULL,
     ALREADY_BOOKED,
-    INVALID_VENDOR,
+    INVALID_USER,
     INVALID_DATE,
+    NOT_VENDOR,      // NEW
     ERROR
 };
 
@@ -27,27 +26,27 @@ struct BookingResult {
     std::string message;
 };
 
-// ----------------------------
-// BookingController Declaration
-// ----------------------------
+// --------------------------------------------------
+// BookingController
+// --------------------------------------------------
+// Coordinates booking operations.
+// Only Vendors are allowed to book/cancel stalls.
+// --------------------------------------------------
 
 class BookingController {
 public:
-    // Constructor with dependency injection
     BookingController(InMemoryStorageManager& storageManager,
-                      WaitlistController& waitlistController);  // ✅ MODIFIED
+                      WaitlistController& waitlistController);
 
-    // Book a stall for a vendor on a specific market date
-    BookingResult bookStall(const std::string& vendorId,
+    BookingResult bookStall(const std::string& userId,
                             const std::string& marketDateId);
 
-    // Cancel a stall booking
-    BookingResult cancelBooking(const std::string& vendorId,
+    BookingResult cancelBooking(const std::string& userId,
                                 const std::string& marketDateId);
 
 private:
-    InMemoryStorageManager& storage;  // Reference to in-memory data manager
-    WaitlistController& waitlistController;  // ✅ ADDED
+    InMemoryStorageManager& storage;
+    WaitlistController& waitlistController;
 };
 
 #endif // BOOKINGCONTROLLER_H
