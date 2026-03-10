@@ -1,12 +1,8 @@
 #include "InMemoryStorageManager.h"
 
-#include "Vendor.h"
-#include "MarketDate.h"
-#include "Waitlist.h"
-#include "VendorCategory.h"
-
 #include <vector>
 #include <utility>
+#include <memory>
 
 // --------------------------------------------------
 // Constructor
@@ -14,27 +10,20 @@
 
 InMemoryStorageManager::InMemoryStorageManager()
 {
-    // Data is loaded explicitly via initializeDefaultData()
 }
-
 
 // --------------------------------------------------
 // initializeDefaultData()
 // --------------------------------------------------
-// Creates:
-// - 4 MarketDates (2 Food, 2 Artisan capacity)
-// - 8 Waitlists (4 dates × 2 categories)
-// - 10 Users (8 vendors + operator + admin)
-// --------------------------------------------------
 
 void InMemoryStorageManager::initializeDefaultData()
 {
-    vendors.clear();
+    users.clear();
     marketDates.clear();
     waitlists.clear();
 
     // --------------------------------------------------
-    // 1️⃣ Create 4 Market Dates
+    // 1️⃣ Create Market Dates
     // --------------------------------------------------
 
     std::vector<std::string> dates = {
@@ -46,16 +35,13 @@ void InMemoryStorageManager::initializeDefaultData()
 
     for (const auto& date : dates) {
 
-        // Create MarketDate with 2 Food + 2 Artisan capacity
         marketDates.emplace(date, MarketDate(date, 2, 2));
 
-        // Create Food waitlist
         waitlists.emplace(
             std::make_pair(date, VendorCategory::FOOD),
             Waitlist(date, VendorCategory::FOOD)
         );
 
-        // Create Artisan waitlist
         waitlists.emplace(
             std::make_pair(date, VendorCategory::ARTISAN),
             Waitlist(date, VendorCategory::ARTISAN)
@@ -63,78 +49,133 @@ void InMemoryStorageManager::initializeDefaultData()
     }
 
     // --------------------------------------------------
-    // 2️⃣ Create Vendors
+    // 2️⃣ Create Vendors (Polymorphic Storage)
     // --------------------------------------------------
 
-    // 4 Food Vendors
-    vendors.emplace("food_vendor_1",
-        Vendor("food_vendor_1", "Fresh Farms", "Alice Smith",
-               "alice@freshfarms.ca", "111-111-1111",
-               "123 Farm Road", VendorCategory::FOOD));
+    users["food_vendor_1"] = std::make_unique<Vendor>(
+        "food_vendor_1",
+        "Alice Smith",
+        "alice@freshfarms.ca",
+        "111-111-1111",
+        "123 Farm Road",
+        "Fresh Farms",
+        VendorCategory::FOOD
+    );
 
-    vendors.emplace("food_vendor_2",
-        Vendor("food_vendor_2", "Green Gardens", "Bob Green",
-               "bob@greengardens.ca", "222-222-2222",
-               "456 Garden Ave", VendorCategory::FOOD));
+    users["food_vendor_2"] = std::make_unique<Vendor>(
+        "food_vendor_2",
+        "Bob Green",
+        "bob@greengardens.ca",
+        "222-222-2222",
+        "456 Garden Ave",
+        "Green Gardens",
+        VendorCategory::FOOD
+    );
 
-    vendors.emplace("food_vendor_3",
-        Vendor("food_vendor_3", "Organic Delights", "Carol White",
-               "carol@organic.ca", "333-333-3333",
-               "789 Organic St", VendorCategory::FOOD));
+    users["food_vendor_3"] = std::make_unique<Vendor>(
+        "food_vendor_3",
+        "Carol White",
+        "carol@organic.ca",
+        "333-333-3333",
+        "789 Organic St",
+        "Organic Delights",
+        VendorCategory::FOOD
+    );
 
-    vendors.emplace("food_vendor_4",
-        Vendor("food_vendor_4", "Harvest Kitchen", "David Brown",
-               "david@harvest.ca", "444-444-4444",
-               "101 Harvest Blvd", VendorCategory::FOOD));
+    users["food_vendor_4"] = std::make_unique<Vendor>(
+        "food_vendor_4",
+        "David Brown",
+        "david@harvest.ca",
+        "444-444-4444",
+        "101 Harvest Blvd",
+        "Harvest Kitchen",
+        VendorCategory::FOOD
+    );
 
-    // 4 Artisan Vendors
-    vendors.emplace("artisan_vendor_1",
-        Vendor("artisan_vendor_1", "Handmade Crafts", "Emma Stone",
-               "emma@crafts.ca", "555-555-5555",
-               "12 Craft Lane", VendorCategory::ARTISAN));
+    users["artisan_vendor_1"] = std::make_unique<Vendor>(
+        "artisan_vendor_1",
+        "Emma Stone",
+        "emma@crafts.ca",
+        "555-555-5555",
+        "12 Craft Lane",
+        "Handmade Crafts",
+        VendorCategory::ARTISAN
+    );
 
-    vendors.emplace("artisan_vendor_2",
-        Vendor("artisan_vendor_2", "WoodWorks", "Frank Miller",
-               "frank@woodworks.ca", "666-666-6666",
-               "34 Timber Rd", VendorCategory::ARTISAN));
+    users["artisan_vendor_2"] = std::make_unique<Vendor>(
+        "artisan_vendor_2",
+        "Frank Miller",
+        "frank@woodworks.ca",
+        "666-666-6666",
+        "34 Timber Rd",
+        "WoodWorks",
+        VendorCategory::ARTISAN
+    );
 
-    vendors.emplace("artisan_vendor_3",
-        Vendor("artisan_vendor_3", "Clay Creations", "Grace Lee",
-               "grace@clay.ca", "777-777-7777",
-               "56 Pottery Ave", VendorCategory::ARTISAN));
+    users["artisan_vendor_3"] = std::make_unique<Vendor>(
+        "artisan_vendor_3",
+        "Grace Lee",
+        "grace@clay.ca",
+        "777-777-7777",
+        "56 Pottery Ave",
+        "Clay Creations",
+        VendorCategory::ARTISAN
+    );
 
-    vendors.emplace("artisan_vendor_4",
-        Vendor("artisan_vendor_4", "Artisan Designs", "Henry Clark",
-               "henry@designs.ca", "888-888-8888",
-               "78 Design St", VendorCategory::ARTISAN));
+    users["artisan_vendor_4"] = std::make_unique<Vendor>(
+        "artisan_vendor_4",
+        "Henry Clark",
+        "henry@designs.ca",
+        "888-888-8888",
+        "78 Design St",
+        "Artisan Designs",
+        VendorCategory::ARTISAN
+    );
 
     // --------------------------------------------------
-    // 3️⃣ Market Operator & System Admin
+    // 3️⃣ Market Operator
     // --------------------------------------------------
-    // Category is not relevant for D1 (no booking for these roles)
 
-    vendors.emplace("market_operator",
-        Vendor("market_operator", "Market Operator", "Operator User",
-               "operator@market.ca", "999-999-9999",
-               "Market Office", VendorCategory::FOOD));
+    users["market_operator"] = std::make_unique<MarketOperator>(
+        "market_operator",
+        "Market Admin",
+        "operator@market.ca",
+        "999-999-9999",
+        "Market Office"
+    );
 
-    vendors.emplace("system_admin",
-        Vendor("system_admin", "System Admin", "Admin User",
-               "admin@market.ca", "000-000-0000",
-               "Admin Office", VendorCategory::FOOD));
+    // --------------------------------------------------
+    // 4️⃣ System Administrator
+    // --------------------------------------------------
+
+    users["system_admin"] = std::make_unique<SystemAdministrator>(
+        "system_admin",
+        "System Admin",
+        "admin@market.ca",
+        "000-000-0000",
+        "Admin Office"
+    );
 }
 
+// --------------------------------------------------
+// getUser()
+// --------------------------------------------------
+
+User* InMemoryStorageManager::getUser(const std::string& userId)
+{
+    auto it = users.find(userId);
+    return (it != users.end()) ? it->second.get() : nullptr;
+}
 
 // --------------------------------------------------
 // getVendor()
 // --------------------------------------------------
 
-Vendor* InMemoryStorageManager::getVendor(const std::string& vendorId)
+Vendor* InMemoryStorageManager::getVendor(const std::string& userId)
 {
-    auto it = vendors.find(vendorId);
-    return (it != vendors.end()) ? &(it->second) : nullptr;
+    User* user = getUser(userId);
+    return dynamic_cast<Vendor*>(user);
 }
-
 
 // --------------------------------------------------
 // getMarketDate()
@@ -145,7 +186,6 @@ MarketDate* InMemoryStorageManager::getMarketDate(const std::string& marketDateI
     auto it = marketDates.find(marketDateId);
     return (it != marketDates.end()) ? &(it->second) : nullptr;
 }
-
 
 // --------------------------------------------------
 // getWaitlist()
