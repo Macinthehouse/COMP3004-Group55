@@ -17,6 +17,7 @@ enum class WaitlistResultType {
     ALREADY_IN_WAITLIST,
     NOT_FOUND,
     MARKET_NOT_FULL,
+    NOT_VENDOR,      // NEW: prevents admin/operator misuse
     ERROR
 };
 
@@ -26,28 +27,21 @@ struct WaitlistResult {
     int queuePosition;  // -1 if not applicable
 };
 
-// ----------------------------
+// --------------------------------------------------
 // WaitlistController
-// ----------------------------
-// Responsibilities:
-// - Manage waitlist placement
-// - Handle removal from waitlist
-// - Automatically promote vendors when stalls free
-//
-// IMPORTANT:
-// - No UI logic
-// - No storage logic
-// - Coordinates between domain objects
-// ----------------------------
+// --------------------------------------------------
+// Coordinates waitlist operations.
+// Only Vendors are allowed to join/leave waitlists.
+// --------------------------------------------------
 
 class WaitlistController {
 public:
     WaitlistController(InMemoryStorageManager& storageManager);
 
-    WaitlistResult joinWaitlist(const std::string& vendorId,
+    WaitlistResult joinWaitlist(const std::string& userId,
                                 const std::string& marketDateId);
 
-    WaitlistResult leaveWaitlist(const std::string& vendorId,
+    WaitlistResult leaveWaitlist(const std::string& userId,
                                  const std::string& marketDateId);
 
     void handlePromotionIfNeeded(const std::string& marketDateId,
