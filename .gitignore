@@ -39,3 +39,11 @@
 
 # debug information files
 *.dwo
+
+#uneeded
+build-*/
+*.pro.user
+HintonMarket.pro.user
+HintonMarket/HintonMarket.pro.user
+HintonMarket/HintonMarket
+HintonMarket
