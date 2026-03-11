@@ -40,7 +40,7 @@ The system uses an in-memory storage manager and runs locally without requiring 
 1. Open Qt Creator.  
 2. Select **Open Project**.  
 3. Navigate to the extracted project folder.  
-4. Open the file named:
+4. Open the file named: `HintonMarket/HintonMarket.pro`
 5. Configure the project using the default kit provided.
 
 ---
@@ -53,6 +53,13 @@ To build the project:
 **OR**  
 - Press **Ctrl + B**
 
+**Terminal build:**
+```bash
+cd HintonMarket
+qmake HintonMarket.pro
+make -j1
+```
+
 Wait for the build to complete successfully with no errors.
 
 ---
@@ -64,6 +71,11 @@ To run the application:
 - Click the **Run** button  
 **OR**  
 - Press **Ctrl + R**
+
+```bash
+cd HintonMarket
+./HintonMarket
+```
 
 The application will launch immediately.
 
