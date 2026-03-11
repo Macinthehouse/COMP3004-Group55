@@ -8,6 +8,7 @@
 #include "VendorCategory.h"
 #include "Notification.h"
 #include "Booking.h"
+#include "ComplianceDocument.h"
 
 
 struct WaitlistStatus {
@@ -17,10 +18,22 @@ struct WaitlistStatus {
     std::string category;      // "Food" / "Artisan"
 };
 
+struct VendorSummary {
+    std::string vendorId;
+    std::string businessName;
+    std::string ownerName;
+    std::string email;
+    std::string phone;
+    std::string mailingAddress;
+    std::string category; // "Food"/"Artisan"
+};
+
 struct VendorDashboardData {
+    VendorSummary vendor;
     std::vector<Booking> confirmedBookings;
     std::vector<Notification> notifications;
-    std::vector<WaitlistStatus> activeWaitlists; // NEW
+    std::vector<WaitlistStatus> activeWaitlists;
+    std::vector<ComplianceDocument> complianceDocuments;
 };
 
 struct MarketDateSummary {
@@ -36,7 +49,6 @@ public:
 
     VendorDashboardData getVendorDashboard(const std::string& userId);
 
-    // NEW: schedule browsing for MarketScheduleUI (UI calls controller, not storage)
     std::vector<MarketDateSummary> listMarketDates();
 
 private:

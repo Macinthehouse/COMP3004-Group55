@@ -122,3 +122,9 @@ VendorCategory Waitlist::getCategory() const
 {
     return category;
 }
+
+std::string Waitlist::peekNextVendorId() const {
+    if (queue.empty()) return "";
+    return queue.front();
+}
+std::vector<std::string> Waitlist::getQueueSnapshot() const { return queue; }

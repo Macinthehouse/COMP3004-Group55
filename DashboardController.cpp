@@ -6,6 +6,7 @@
 #include "Vendor.h"
 #include "MarketDate.h"
 #include "Waitlist.h"
+#include "ComplianceDocument.h"
 
 static std::string categoryToString(VendorCategory c) {
     return (c == VendorCategory::FOOD) ? "Food" : "Artisan";
@@ -49,8 +50,19 @@ VendorDashboardData DashboardController::getVendorDashboard(const std::string& u
         return data; // empty
     }
 
+    // ---- Vendor summary (business info) ----
+    data.vendor.vendorId = vendor->getId();
+    data.vendor.businessName = vendor->getBusinessName();
+    data.vendor.ownerName = vendor->getName();
+    data.vendor.email = vendor->getEmail();
+    data.vendor.phone = vendor->getPhone();
+    data.vendor.mailingAddress = vendor->getAddress();
+    data.vendor.category = categoryToString(vendor->getCategory());
+
+    // ---- Existing dashboard sections ----
     data.confirmedBookings = vendor->getBookings();
     data.notifications = vendor->getNotifications();
+    data.complianceDocuments = vendor->getComplianceDocuments();
 
     const VendorCategory cat = vendor->getCategory();
 
@@ -66,7 +78,7 @@ VendorDashboardData DashboardController::getVendorDashboard(const std::string& u
             WaitlistStatus ws;
             ws.marketDateId = marketDateId;
             ws.dateIso = marketDateId;
-            ws.position = wl->getPosition(userId); // 1-based per Waitlist.h
+            ws.position = wl->getPosition(userId); // 1-based
             ws.category = categoryToString(cat);
             data.activeWaitlists.push_back(ws);
         }

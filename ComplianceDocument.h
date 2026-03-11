@@ -46,7 +46,7 @@ public:
     // Utility
     // --------------------------------------------------
 
-    bool isValid() const;  // Simple expiry check (D1 simplified)
+    bool isValid() const;  // Simple expiry check
 
 private:
     std::string documentName;

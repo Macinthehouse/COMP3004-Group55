@@ -42,6 +42,8 @@ public:
     bool containsVendor(const std::string& vendorId) const;
     int getPosition(const std::string& vendorId) const;  // 1-based index
     bool isEmpty() const;
+    std::string peekNextVendorId() const;
+    std::vector<std::string> getQueueSnapshot() const;
 
     // Getters
     std::string getMarketDateId() const;

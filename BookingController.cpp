@@ -8,6 +8,7 @@
 #include "Booking.h"
 #include "Notification.h"
 #include "VendorCategory.h"
+#include "Waitlist.h"
 
 // ---------------------------------------------
 // Constructor
@@ -30,7 +31,7 @@ std::vector<MarketDate*> BookingController::getAvailableMarketDates() {
 // ---------------------------------------------
 
 BookingResult BookingController::bookStall(const std::string& userId,
-                                           const std::string& marketDateId)
+                                          const std::string& marketDateId)
 {
     // 1️⃣ Retrieve User
     User* user = storage.getUser(userId);
@@ -67,17 +68,33 @@ BookingResult BookingController::bookStall(const std::string& userId,
                  "No stalls available for this category." };
     }
 
+    // 5️⃣b Enforce waitlist priority (if a waitlist exists and is non-empty)
+    Waitlist* wl = storage.getWaitlist(marketDateId, category);
+    if (wl && !wl->isEmpty()) {
+        const std::string headId = wl->peekNextVendorId();
+        if (!headId.empty() && headId != userId) {
+            return { BookingResultType::ERROR,
+                     "A waitlist exists for " + marketDateId +
+                     ". Only the next vendor in line may book right now." };
+        }
+    }
+
     // 6️⃣ Create booking
     Booking booking(userId, marketDateId, category);
 
     marketDate->addBooking(booking);
     vendor->addBooking(booking);
 
+    // 6️⃣b If this vendor was next-in-line, remove them from the waitlist now
+    if (wl && !wl->isEmpty() && wl->peekNextVendorId() == userId) {
+        wl->dequeue();
+        waitlistController.notifyVendorsMovedUp(marketDateId, category, 1);
+    }
+
     // 7️⃣ Confirmation notification
     Notification notification(
         "Booking confirmed for market date " + marketDateId
     );
-
     vendor->addNotification(notification);
 
     return { BookingResultType::SUCCESS,

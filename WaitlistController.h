@@ -17,7 +17,7 @@ enum class WaitlistResultType {
     ALREADY_IN_WAITLIST,
     NOT_FOUND,
     MARKET_NOT_FULL,
-    NOT_VENDOR,      // NEW: prevents admin/operator misuse
+    NOT_VENDOR,
     ERROR
 };
 
@@ -48,6 +48,8 @@ public:
                                  VendorCategory category);
 
     int getWaitlistPosition(const std::string& userId, const std::string& marketDateId, VendorCategory category);
+
+    void notifyVendorsMovedUp(const std::string& marketDateId, VendorCategory category, int fromPosition1Based);
 
 private:
     InMemoryStorageManager& storage;

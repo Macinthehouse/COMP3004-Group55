@@ -20,7 +20,7 @@ enum class BookingResultType {
     ALREADY_BOOKED,
     INVALID_USER,
     INVALID_DATE,
-    NOT_VENDOR,      // NEW
+    NOT_VENDOR,
     ERROR
 };
 
