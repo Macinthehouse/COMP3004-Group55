@@ -47,6 +47,8 @@ public:
     void handlePromotionIfNeeded(const std::string& marketDateId,
                                  VendorCategory category);
 
+    int getWaitlistPosition(const std::string& userId, const std::string& marketDateId, VendorCategory category);
+
 private:
     InMemoryStorageManager& storage;
 };
