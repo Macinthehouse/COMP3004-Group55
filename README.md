@@ -1,16 +1,16 @@
-HINTON MARKET STALL BOOKING SYSTEM
-COMP3004 — Deliverable 1
-Team Number: 55
+# Hinton Market Stall Booking System  
+## COMP3004 — Deliverable 1  
+**Team Number:** 55  
 
-Team Members:
-Hussain Almahooz – 101258192
-Khalil Bruce – 101308601
-Shaswat Tyagi – 101263508
-Paimana Sultani – 101287827
+### Team Members
+- Hussain Almahooz – 101258192  
+- Khalil Bruce – 101308601  
+- Shaswat Tyagi – 101263508  
+- Paimana Sultani – 101287827  
 
-============================================================
+---
 
-OVERVIEW
+## Overview
 
 This application is a Qt-based market stall booking and waitlist management system developed for the Hinton Market.
 
@@ -18,105 +18,92 @@ The system allows different types of users to log in and perform tasks such as b
 
 The system uses an in-memory storage manager and runs locally without requiring any external libraries or environment setup.
 
-============================================================
+---
 
-SYSTEM REQUIREMENTS
+## System Requirements
 
-• Qt Creator (course VM version)
-• No additional libraries required
-• No environment configuration required
+- Qt Creator (course VM version)  
+- No additional libraries required  
+- No environment configuration required  
 
-============================================================
+---
 
-INSTALLATION INSTRUCTIONS
+## Installation Instructions
 
-Extract the submission zip file.
+1. Extract the submission zip file.  
+2. Ensure the extracted folder structure remains unchanged.  
 
-Ensure the extracted folder structure remains unchanged.
+---
 
-============================================================
+## Project Opening Instructions
 
-PROJECT OPENING INSTRUCTIONS
+1. Open Qt Creator.  
+2. Select **Open Project**.  
+3. Navigate to the extracted project folder.  
+4. Open the file named:
+5. Configure the project using the default kit provided.
 
-Open Qt Creator.
+---
 
-Select Open Project.
-
-Navigate to the extracted project folder.
-
-Open the file named:
-
-HintonMarket.pro
-
-Configure the project using the default kit provided.
-
-============================================================
-
-BUILD INSTRUCTIONS
+## Build Instructions
 
 To build the project:
 
-• Click the Build (hammer) button
-OR
-• Press Ctrl + B
+- Click the **Build** button  
+**OR**  
+- Press **Ctrl + B**
 
 Wait for the build to complete successfully with no errors.
 
-============================================================
+---
 
-LAUNCH (RUN) INSTRUCTIONS
+## Launch (Run) Instructions
 
 To run the application:
 
-• Click the Run (green play) button
-OR
-• Press Ctrl + R
+- Click the **Run** button  
+**OR**  
+- Press **Ctrl + R**
 
 The application will launch immediately.
 
-============================================================
+---
 
-TEST USER ACCOUNTS
+## Test User Accounts
 
 Default users are initialized in the system.
 
-The following usernames may be used for testing:
+### Food Vendors
+- food_vendor_1  
+- food_vendor_2  
+- food_vendor_3  
+- food_vendor_4  
 
-FOOD VENDORS
-• food_vendor_1
-• food_vendor_2
-• food_vendor_3
-• food_vendor_4
+### Artisan Vendors
+- artisan_vendor_1  
+- artisan_vendor_2  
+- artisan_vendor_3  
+- artisan_vendor_4  
 
-ARTISAN VENDORS
-• artisan_vendor_1
-• artisan_vendor_2
-• artisan_vendor_3
-• artisan_vendor_4
+### Market Operator
+- market_operator  
 
-MARKET OPERATOR
-• market_operator
-
-SYSTEM ADMINISTRATOR
-• system_admin
+### System Administrator
+- system_admin  
 
 No password is required for login.
 
-============================================================
+---
 
-SUBMISSION CONTENTS
+## Submission Contents
 
-This submission includes:
+- All source code files (.cpp and .h)  
+- Qt project file (**HintonMarket.pro**)  
+- README containing setup and testing instructions  
+- System Decomposition Diagram (PDF)
 
-• All source code files (.cpp and .h)
-• Qt project file (HintonMarket.pro)
-• README containing setup and testing instructions
-• System Decomposition Diagram (PDF)
+---
 
-============================================================
-
-TURNKEY EXECUTION
+## Turnkey Execution
 
 The project can be opened, built, and run directly in Qt Creator without modifying file paths, settings, or configuration options.
-
-============================================================
