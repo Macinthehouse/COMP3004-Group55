@@ -57,7 +57,7 @@ Wait for the build to complete successfully with no errors.
 
 ---
 
-## Launch (Run) Instructions
+## Launch Instructions
 
 To run the application:
 
