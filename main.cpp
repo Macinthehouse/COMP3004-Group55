@@ -10,19 +10,16 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    // ------------------------------------------------
     // Central In-Memory Storage
-    // ------------------------------------------------
+    
     // Stores:
     // - Polymorphic Users (Vendor, MarketOperator, SystemAdministrator)
     // - MarketDates
     // - Waitlists
-    // ------------------------------------------------
+
     InMemoryStorageManager storage;
 
-    // ------------------------------------------------
     // Default Data
-    // ------------------------------------------------
     // Creates:
     // - 4 Market Dates (2 Food + 2 Artisan capacity)
     // - 8 Waitlists (4 dates × 2 categories)
@@ -32,12 +29,10 @@ int main(int argc, char *argv[])
     // - 1 SystemAdministrator
     //
     // All stored polymorphically as std::unique_ptr<User>
-    // ------------------------------------------------
     storage.initializeDefaultData();
 
-    // ------------------------------------------------
-    // Controllers (Dependency Injection)
-    // ------------------------------------------------
+    // Controllers
+    
     // Controllers depend on storage
     // BookingController depends on WaitlistController
     // ------------------------------------------------
@@ -45,9 +40,7 @@ int main(int argc, char *argv[])
     BookingController bookingController(storage, waitlistController);
     LoginController loginController(&storage);
 
-    // ------------------------------------------------
     // Backend Ready
-    // ------------------------------------------------
     std::cout << "HintonMarket backend initialized successfully." << std::endl;
 
     return 0;
