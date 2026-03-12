@@ -13,12 +13,6 @@
 // - Store vendorId
 // - Store marketDateId
 // - Store vendor category (Food or Artisan)
-//
-// IMPORTANT:
-// - No business rules here
-// - No UI logic
-// - No storage logic
-// - Pure data object
 // --------------------------------------------------
 
 class Booking {
