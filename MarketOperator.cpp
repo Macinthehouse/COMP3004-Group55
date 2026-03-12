@@ -1,17 +1,14 @@
 #include "MarketOperator.h"
 
-// --------------------------------------------------
 // Default Constructor
-// --------------------------------------------------
 
 MarketOperator::MarketOperator()
     : User()
 {
 }
 
-// --------------------------------------------------
+
 // Parameterized Constructor
-// --------------------------------------------------
 
 MarketOperator::MarketOperator(const std::string& id,
                                const std::string& name,
@@ -22,9 +19,7 @@ MarketOperator::MarketOperator(const std::string& id,
 {
 }
 
-// --------------------------------------------------
 // Role Identification
-// --------------------------------------------------
 
 std::string MarketOperator::getRoleName() const
 {
