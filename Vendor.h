@@ -21,9 +21,6 @@
 // - Track system notifications
 // - Track compliance documents
 // - Provide booking-related validation
-//
-// NOTE:
-// - Identity fields are inherited from User
 // --------------------------------------------------
 
 class Vendor : public User {
