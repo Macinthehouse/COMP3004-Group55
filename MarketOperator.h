@@ -11,12 +11,6 @@
 // Responsibilities:
 // - Identify as Market Operator
 // - Provide role name
-//
-// NOTE:
-// - No booking logic
-// - No compliance logic
-// - No waitlist logic
-// - Pure role-based user type
 // --------------------------------------------------
 
 class MarketOperator : public User {
