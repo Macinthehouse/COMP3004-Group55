@@ -9,9 +9,7 @@
 class InMemoryStorageManager;
 class WaitlistController;
 
-// ----------------------------
 // Booking Result Definitions
-// ----------------------------
 
 enum class BookingResultType {
     SUCCESS,
@@ -28,13 +26,11 @@ struct BookingResult {
     std::string message;
 };
 
-// --------------------------------------------------
 // BookingController
-// --------------------------------------------------
+
 // Responsibilities:
 //     - Coordinates booking operations.
 //     - book/cancel stalls (Only Vendors are allowed to perform these).
-// --------------------------------------------------
 
 class BookingController {
 public:
