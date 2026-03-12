@@ -6,7 +6,6 @@
 
 #include "MarketDate.h"
 
-// Forward declarations
 class InMemoryStorageManager;
 class WaitlistController;
 
@@ -32,8 +31,9 @@ struct BookingResult {
 // --------------------------------------------------
 // BookingController
 // --------------------------------------------------
-// Coordinates booking operations.
-// Only Vendors are allowed to book/cancel stalls.
+// Responsibilities:
+//     - Coordinates booking operations.
+//     - book/cancel stalls (Only Vendors are allowed to perform these).
 // --------------------------------------------------
 
 class BookingController {
