@@ -11,12 +11,6 @@
 // Responsibilities:
 // - Store common identity information
 // - Provide role identification
-//
-// IMPORTANT:
-// - Abstract class
-// - No booking logic
-// - No compliance logic
-// - No UI logic
 // --------------------------------------------------
 
 class User {
