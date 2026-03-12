@@ -10,9 +10,7 @@
 #include "VendorCategory.h"
 #include "Waitlist.h"
 
-// ---------------------------------------------
 // Constructor
-// ---------------------------------------------
 
 BookingController::BookingController(InMemoryStorageManager& storageManager,
                                      WaitlistController& waitlistCtrl)
@@ -26,9 +24,7 @@ std::vector<MarketDate*> BookingController::getAvailableMarketDates() {
     return storage.getAllMarketDates(); 
 }
 
-// ---------------------------------------------
 // bookStall()
-// ---------------------------------------------
 
 BookingResult BookingController::bookStall(const std::string& userId,
                                           const std::string& marketDateId)
@@ -101,9 +97,7 @@ BookingResult BookingController::bookStall(const std::string& userId,
              "Booking successful." };
 }
 
-// ---------------------------------------------
 // cancelBooking()
-// ---------------------------------------------
 
 BookingResult BookingController::cancelBooking(const std::string& userId,
                                                const std::string& marketDateId)
