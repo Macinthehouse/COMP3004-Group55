@@ -33,34 +33,34 @@ std::vector<MarketDate*> BookingController::getAvailableMarketDates() {
 BookingResult BookingController::bookStall(const std::string& userId,
                                           const std::string& marketDateId)
 {
-    // 1️⃣ Retrieve User
+    // Retrieve User
     User* user = storage.getUser(userId);
     if (!user) {
         return { BookingResultType::INVALID_USER,
                  "User not found." };
     }
 
-    // 2️⃣ Ensure user is Vendor
+    // Ensure user is Vendor
     Vendor* vendor = dynamic_cast<Vendor*>(user);
     if (!vendor) {
         return { BookingResultType::NOT_VENDOR,
                  "Only vendors may book stalls." };
     }
 
-    // 3️⃣ Retrieve MarketDate
+    // Retrieve MarketDate
     MarketDate* marketDate = storage.getMarketDate(marketDateId);
     if (!marketDate) {
         return { BookingResultType::INVALID_DATE,
                  "Market date not found." };
     }
 
-    // 4️⃣ Prevent duplicate booking
+    // Prevent duplicate booking
     if (vendor->hasBookingForDate(marketDateId)) {
         return { BookingResultType::ALREADY_BOOKED,
                  "Vendor already has a booking for this date." };
     }
 
-    // 5️⃣ Check stall availability
+    // Check stall availability
     VendorCategory category = vendor->getCategory();
 
     if (!marketDate->hasAvailableStall(category)) {
@@ -68,7 +68,7 @@ BookingResult BookingController::bookStall(const std::string& userId,
                  "No stalls available for this category." };
     }
 
-    // 5️⃣b Enforce waitlist priority (if a waitlist exists and is non-empty)
+    // Enforce waitlist priority (if a waitlist exists and is non-empty)
     Waitlist* wl = storage.getWaitlist(marketDateId, category);
     if (wl && !wl->isEmpty()) {
         const std::string headId = wl->peekNextVendorId();
@@ -79,19 +79,19 @@ BookingResult BookingController::bookStall(const std::string& userId,
         }
     }
 
-    // 6️⃣ Create booking
+    // Create booking
     Booking booking(userId, marketDateId, category);
 
     marketDate->addBooking(booking);
     vendor->addBooking(booking);
 
-    // 6️⃣b If this vendor was next-in-line, remove them from the waitlist now
+    // If this vendor was next-in-line, remove them from the waitlist now
     if (wl && !wl->isEmpty() && wl->peekNextVendorId() == userId) {
         wl->dequeue();
         waitlistController.notifyVendorsMovedUp(marketDateId, category, 1);
     }
 
-    // 7️⃣ Confirmation notification
+    // Confirmation notification
     Notification notification(
         "Booking confirmed for market date " + marketDateId
     );
@@ -108,28 +108,28 @@ BookingResult BookingController::bookStall(const std::string& userId,
 BookingResult BookingController::cancelBooking(const std::string& userId,
                                                const std::string& marketDateId)
 {
-    // 1️⃣ Retrieve User
+    // Retrieve User
     User* user = storage.getUser(userId);
     if (!user) {
         return { BookingResultType::INVALID_USER,
                  "User not found." };
     }
 
-    // 2️⃣ Ensure user is Vendor
+    // Ensure user is Vendor
     Vendor* vendor = dynamic_cast<Vendor*>(user);
     if (!vendor) {
         return { BookingResultType::NOT_VENDOR,
                  "Only vendors may cancel bookings." };
     }
 
-    // 3️⃣ Retrieve MarketDate
+    // Retrieve MarketDate
     MarketDate* marketDate = storage.getMarketDate(marketDateId);
     if (!marketDate) {
         return { BookingResultType::INVALID_DATE,
                  "Market date not found." };
     }
 
-    // 4️⃣ Ensure booking exists
+    // Ensure booking exists
     if (!vendor->hasBookingForDate(marketDateId)) {
         return { BookingResultType::ERROR,
                  "No booking found for this date." };
@@ -137,18 +137,18 @@ BookingResult BookingController::cancelBooking(const std::string& userId,
 
     VendorCategory category = vendor->getCategory();
 
-    // 5️⃣ Remove booking
+    // Remove booking
     marketDate->removeBooking(userId);
     vendor->removeBooking(marketDateId);
 
-    // 6️⃣ Cancellation notification
+    // Cancellation notification
     Notification notification(
         "Booking cancelled for market date " + marketDateId
     );
 
     vendor->addNotification(notification);
 
-    // 7️⃣ Trigger automatic waitlist promotion
+    // Trigger automatic waitlist promotion
     waitlistController.handlePromotionIfNeeded(marketDateId, category);
 
     return { BookingResultType::SUCCESS,
