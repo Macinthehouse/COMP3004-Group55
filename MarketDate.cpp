@@ -1,10 +1,7 @@
 #include "MarketDate.h"
 
-// --------------------------------------------------
 // Default Constructor
-// --------------------------------------------------
 // Required for use in STL containers (e.g., unordered_map).
-// --------------------------------------------------
 
 MarketDate::MarketDate()
     : maxFoodVendors(2),
@@ -12,9 +9,7 @@ MarketDate::MarketDate()
 {
 }
 
-// --------------------------------------------------
 // Parameterized Constructor
-// --------------------------------------------------
 
 MarketDate::MarketDate(const std::string& date,
                        int maxFoodVendors,
@@ -25,22 +20,18 @@ MarketDate::MarketDate(const std::string& date,
 {
 }
 
-// --------------------------------------------------
 // Getter
-// --------------------------------------------------
 
 std::string MarketDate::getDate() const
 {
     return date;
 }
 
-// --------------------------------------------------
 // hasAvailableStall()
-// --------------------------------------------------
+
 // Enforces capacity rule:
 // - Maximum 2 FOOD vendors
 // - Maximum 2 ARTISAN vendors
-// --------------------------------------------------
 
 bool MarketDate::hasAvailableStall(VendorCategory category) const
 {
@@ -67,9 +58,7 @@ bool MarketDate::hasAvailableStall(VendorCategory category) const
     return false;
 }
 
-// --------------------------------------------------
 // addBooking()
-// --------------------------------------------------
 
 void MarketDate::addBooking(const Booking& booking)
 {
@@ -79,9 +68,7 @@ void MarketDate::addBooking(const Booking& booking)
     }
 }
 
-// --------------------------------------------------
 // removeBooking()
-// --------------------------------------------------
 
 void MarketDate::removeBooking(const std::string& vendorId)
 {
@@ -93,9 +80,7 @@ void MarketDate::removeBooking(const std::string& vendorId)
     }
 }
 
-// --------------------------------------------------
 // getBookings()
-// --------------------------------------------------
 
 const std::vector<Booking>& MarketDate::getBookings() const
 {
