@@ -25,8 +25,6 @@ Waitlist::Waitlist(const std::string& marketDateId,
 // --------------------------------------------------
 // enqueue()
 // --------------------------------------------------
-// Adds vendor to end of queue (FIFO).
-// --------------------------------------------------
 
 void Waitlist::enqueue(const std::string& vendorId)
 {
@@ -35,9 +33,6 @@ void Waitlist::enqueue(const std::string& vendorId)
 
 // --------------------------------------------------
 // dequeue()
-// --------------------------------------------------
-// Removes and returns the first vendor in queue.
-// Returns empty string if queue is empty.
 // --------------------------------------------------
 
 std::string Waitlist::dequeue()
@@ -54,9 +49,6 @@ std::string Waitlist::dequeue()
 
 // --------------------------------------------------
 // remove()
-// --------------------------------------------------
-// Removes specific vendor from queue if present.
-// Maintains FIFO order for remaining vendors.
 // --------------------------------------------------
 
 void Waitlist::remove(const std::string& vendorId)
@@ -85,9 +77,6 @@ bool Waitlist::containsVendor(const std::string& vendorId) const
 
 // --------------------------------------------------
 // getPosition()
-// --------------------------------------------------
-// Returns 1-based position in queue.
-// Returns -1 if vendor not found.
 // --------------------------------------------------
 
 int Waitlist::getPosition(const std::string& vendorId) const
