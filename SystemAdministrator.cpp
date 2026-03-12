@@ -1,18 +1,12 @@
 #include "SystemAdministrator.h"
 
-// --------------------------------------------------
 // Default Constructor
-// --------------------------------------------------
-
 SystemAdministrator::SystemAdministrator()
     : User()
 {
 }
 
-// --------------------------------------------------
 // Parameterized Constructor
-// --------------------------------------------------
-
 SystemAdministrator::SystemAdministrator(const std::string& id,
                                          const std::string& name,
                                          const std::string& email,
@@ -22,10 +16,7 @@ SystemAdministrator::SystemAdministrator(const std::string& id,
 {
 }
 
-// --------------------------------------------------
 // Role Identification
-// --------------------------------------------------
-
 std::string SystemAdministrator::getRoleName() const
 {
     return "SystemAdministrator";
