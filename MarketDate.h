@@ -7,9 +7,8 @@
 #include "VendorCategory.h"
 #include "Booking.h"
 
-// --------------------------------------------------
 // MarketDate Class
-// --------------------------------------------------
+
 // Represents a single market date in the system.
 //
 // Responsibilities:
@@ -24,13 +23,11 @@
 // - No controller logic
 // - No UI logic
 // - Pure domain entity
-// --------------------------------------------------
 
 class MarketDate {
 public:
-    // --------------------------------------------------
+
     // Constructors
-    // --------------------------------------------------
 
     MarketDate();  // Required for STL containers
 
@@ -38,15 +35,10 @@ public:
                int maxFoodVendors,
                int maxArtisanVendors);
 
-    // --------------------------------------------------
     // Getters
-    // --------------------------------------------------
-
     std::string getDate() const;
 
-    // --------------------------------------------------
     // Capacity & Booking Management
-    // --------------------------------------------------
 
     // Returns true if a stall is available
     // for the given vendor category.
