@@ -10,18 +10,14 @@
 
 #include <string>
 
-// ---------------------------------------------
 // Constructor
-// ---------------------------------------------
 
 WaitlistController::WaitlistController(InMemoryStorageManager& storageManager)
     : storage(storageManager)
 {
 }
 
-// ---------------------------------------------
 // joinWaitlist()
-// ---------------------------------------------
 
 WaitlistResult WaitlistController::joinWaitlist(const std::string& userId,
                                                 const std::string& marketDateId)
@@ -93,9 +89,7 @@ WaitlistResult WaitlistController::joinWaitlist(const std::string& userId,
 }
 
 
-// ---------------------------------------------
 // leaveWaitlist()
-// ---------------------------------------------
 
 WaitlistResult WaitlistController::leaveWaitlist(const std::string& userId,
                                                  const std::string& marketDateId)
@@ -155,9 +149,7 @@ WaitlistResult WaitlistController::leaveWaitlist(const std::string& userId,
 }
 
 
-// ---------------------------------------------
 // handlePromotionIfNeeded()
-// ---------------------------------------------
 
 void WaitlistController::handlePromotionIfNeeded(const std::string& marketDateId,
                                                  VendorCategory category)
@@ -201,9 +193,7 @@ void WaitlistController::handlePromotionIfNeeded(const std::string& marketDateId
     }
 }
 
-// ---------------------------------------------
 // getWaitlistPosition()
-// ---------------------------------------------
 int WaitlistController::getWaitlistPosition(const std::string& userId, 
                                             const std::string& marketDateId, 
                                             VendorCategory category) {
