@@ -9,17 +9,13 @@
 #include <utility>
 #include <memory>
 
-// --------------------------------------------------
 // Constructor
-// --------------------------------------------------
 
 InMemoryStorageManager::InMemoryStorageManager()
 {
 }
 
-// --------------------------------------------------
 // initializeDefaultData()
-// --------------------------------------------------
 
 void InMemoryStorageManager::initializeDefaultData()
 {
@@ -27,9 +23,7 @@ void InMemoryStorageManager::initializeDefaultData()
     marketDates.clear();
     waitlists.clear();
 
-    // --------------------------------------------------
     // Create Market Dates
-    // --------------------------------------------------
 
     std::vector<std::string> dates = {
         "2026-04-01",
@@ -53,9 +47,7 @@ void InMemoryStorageManager::initializeDefaultData()
         );
     }
 
-    // --------------------------------------------------
     // Create Vendors (Polymorphic Storage)
-    // --------------------------------------------------
 
     users["food_vendor_1"] = std::unique_ptr<User>(new Vendor(
         "food_vendor_1",
@@ -137,9 +129,7 @@ void InMemoryStorageManager::initializeDefaultData()
         VendorCategory::ARTISAN
     ));
 
-    // --------------------------------------------------
     // Market Operator
-    // --------------------------------------------------
 
     users["market_operator"] = std::unique_ptr<User>(new MarketOperator(
         "market_operator",
@@ -149,9 +139,7 @@ void InMemoryStorageManager::initializeDefaultData()
         "Market Office"
     ));
 
-    // --------------------------------------------------
     // System Administrator
-    // --------------------------------------------------
 
     users["system_admin"] = std::unique_ptr<User>(new SystemAdministrator(
         "system_admin",
@@ -161,10 +149,7 @@ void InMemoryStorageManager::initializeDefaultData()
         "Admin Office"
     ));
 
-    // --------------------------------------------------
     // Create Compliance Documents (Extended Legal Text)
-    // --------------------------------------------------
-
     ComplianceDocument foodLicense(
         "Food Handling License",
         "FH-2026-001",
@@ -197,10 +182,7 @@ void InMemoryStorageManager::initializeDefaultData()
         "continuously throughout the market season."
     );
 
-    // --------------------------------------------------
     // Attach Compliance Documents to All Vendors
-    // --------------------------------------------------
-
     for (auto& pair : users) {
 
         Vendor* vendor = dynamic_cast<Vendor*>(pair.second.get());
@@ -212,40 +194,28 @@ void InMemoryStorageManager::initializeDefaultData()
     }
 }
 
-// --------------------------------------------------
 // getUser()
-// --------------------------------------------------
-
 User* InMemoryStorageManager::getUser(const std::string& userId)
 {
     auto it = users.find(userId);
     return (it != users.end()) ? it->second.get() : nullptr;
 }
 
-// --------------------------------------------------
 // getVendor()
-// --------------------------------------------------
-
 Vendor* InMemoryStorageManager::getVendor(const std::string& userId)
 {
     User* user = getUser(userId);
     return dynamic_cast<Vendor*>(user);
 }
 
-// --------------------------------------------------
 // getMarketDate()
-// --------------------------------------------------
-
 MarketDate* InMemoryStorageManager::getMarketDate(const std::string& marketDateId)
 {
     auto it = marketDates.find(marketDateId);
     return (it != marketDates.end()) ? &(it->second) : nullptr;
 }
 
-// --------------------------------------------------
 // getWaitlist()
-// --------------------------------------------------
-
 Waitlist* InMemoryStorageManager::getWaitlist(const std::string& marketDateId,
                                               VendorCategory category)
 {
@@ -255,14 +225,11 @@ Waitlist* InMemoryStorageManager::getWaitlist(const std::string& marketDateId,
     return (it != waitlists.end()) ? &(it->second) : nullptr;
 }
 
-// --------------------------------------------------
 // Iterate through marketDates map and collect the pointers into a list.
-// --------------------------------------------------
 std::vector<MarketDate*> InMemoryStorageManager::getAllMarketDates() {
     std::vector<MarketDate*> allDates;
 
     for (auto& kv : marketDates) {
-        // kv.first is the id, kv.second is the MarketDate object
         allDates.push_back(&kv.second);
     }
 
