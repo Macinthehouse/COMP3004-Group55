@@ -7,9 +7,7 @@
 class InMemoryStorageManager;
 enum class VendorCategory;
 
-// ----------------------------
 // Waitlist Result Definitions
-// ----------------------------
 
 enum class WaitlistResultType {
     SUCCESS,
@@ -27,9 +25,7 @@ struct WaitlistResult {
     int queuePosition;  // -1 if not applicable
 };
 
-// --------------------------------------------------
 // WaitlistController
-// --------------------------------------------------
 
 class WaitlistController {
 public:
