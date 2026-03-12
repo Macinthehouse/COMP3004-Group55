@@ -28,7 +28,7 @@ void InMemoryStorageManager::initializeDefaultData()
     waitlists.clear();
 
     // --------------------------------------------------
-    // 1️⃣ Create Market Dates
+    // Create Market Dates
     // --------------------------------------------------
 
     std::vector<std::string> dates = {
@@ -54,7 +54,7 @@ void InMemoryStorageManager::initializeDefaultData()
     }
 
     // --------------------------------------------------
-    // 2️⃣ Create Vendors (Polymorphic Storage)
+    // Create Vendors (Polymorphic Storage)
     // --------------------------------------------------
 
     users["food_vendor_1"] = std::unique_ptr<User>(new Vendor(
@@ -138,7 +138,7 @@ void InMemoryStorageManager::initializeDefaultData()
     ));
 
     // --------------------------------------------------
-    // 3️⃣ Market Operator
+    // Market Operator
     // --------------------------------------------------
 
     users["market_operator"] = std::unique_ptr<User>(new MarketOperator(
@@ -150,7 +150,7 @@ void InMemoryStorageManager::initializeDefaultData()
     ));
 
     // --------------------------------------------------
-    // 4️⃣ System Administrator
+    // System Administrator
     // --------------------------------------------------
 
     users["system_admin"] = std::unique_ptr<User>(new SystemAdministrator(
@@ -162,7 +162,7 @@ void InMemoryStorageManager::initializeDefaultData()
     ));
 
     // --------------------------------------------------
-    // 5️⃣ Create Compliance Documents (Extended Legal Text)
+    // Create Compliance Documents (Extended Legal Text)
     // --------------------------------------------------
 
     ComplianceDocument foodLicense(
@@ -198,7 +198,7 @@ void InMemoryStorageManager::initializeDefaultData()
     );
 
     // --------------------------------------------------
-    // 6️⃣ Attach Compliance Documents to All Vendors
+    // Attach Compliance Documents to All Vendors
     // --------------------------------------------------
 
     for (auto& pair : users) {
@@ -256,7 +256,7 @@ Waitlist* InMemoryStorageManager::getWaitlist(const std::string& marketDateId,
 }
 
 // --------------------------------------------------
-// Iterate through your marketDates map and collect the pointers into a list.
+// Iterate through marketDates map and collect the pointers into a list.
 // --------------------------------------------------
 std::vector<MarketDate*> InMemoryStorageManager::getAllMarketDates() {
     std::vector<MarketDate*> allDates;
