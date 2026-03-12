@@ -15,40 +15,30 @@
 #include "MarketDate.h"
 #include "Waitlist.h"
 
-// --------------------------------------------------
 // InMemoryStorageManager
-// --------------------------------------------------
+
 // Central in-memory storage
 // Responsible for storing:
 // - Users (Vendor, MarketOperator, SystemAdministrator)
 // - MarketDates
 // - Waitlists
-// --------------------------------------------------
 
 class InMemoryStorageManager {
 public:
     InMemoryStorageManager();   
 
-    // ----------------------------
     // Initialization
-    // ----------------------------
     void initializeDefaultData();
 
-    // ----------------------------
     // User Access
-    // ----------------------------
     User* getUser(const std::string& userId);
 
     Vendor* getVendor(const std::string& userId);
 
-    // ----------------------------
     // MarketDate Access
-    // ----------------------------
     MarketDate* getMarketDate(const std::string& marketDateId);
 
-    // ----------------------------
     // Waitlist Access
-    // ----------------------------
     Waitlist* getWaitlist(const std::string& marketDateId,
                           VendorCategory category);
     
