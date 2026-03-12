@@ -13,11 +13,6 @@
 // - Store document details
 // - Store expiry information
 // - Provide legal description text
-//
-// NOTE:
-// - Pure domain entity
-// - No UI logic
-// - No controller logic
 // --------------------------------------------------
 
 class ComplianceDocument {
