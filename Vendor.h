@@ -10,9 +10,8 @@
 #include "Notification.h"
 #include "ComplianceDocument.h"
 
-// --------------------------------------------------
 // Vendor Class (Inherits from User)
-// --------------------------------------------------
+
 // Represents a vendor user in the HintonMarket system.
 //
 // Responsibilities:
@@ -21,13 +20,11 @@
 // - Track system notifications
 // - Track compliance documents
 // - Provide booking-related validation
-// --------------------------------------------------
 
 class Vendor : public User {
 public:
-    // --------------------------------------------------
+
     // Constructors
-    // --------------------------------------------------
 
     Vendor();
 
@@ -39,38 +36,29 @@ public:
            const std::string& businessName,
            VendorCategory category);
 
-    // --------------------------------------------------
     // Role Identification
-    // --------------------------------------------------
+
 
     std::string getRoleName() const override;
 
-    // --------------------------------------------------
     // Vendor-Specific Getters
-    // --------------------------------------------------
 
     std::string getBusinessName() const;
     VendorCategory getCategory() const;
 
-    // --------------------------------------------------
     // Booking Management
-    // --------------------------------------------------
 
     bool hasBookingForDate(const std::string& marketDateId) const;
     void addBooking(const Booking& booking);
     void removeBooking(const std::string& marketDateId);
     const std::vector<Booking>& getBookings() const;
 
-    // --------------------------------------------------
     // Notification Management
-    // --------------------------------------------------
 
     void addNotification(const Notification& notification);
     const std::vector<Notification>& getNotifications() const;
 
-    // --------------------------------------------------
     // Compliance Management
-    // --------------------------------------------------
 
     void addComplianceDocument(const ComplianceDocument& document);
     const std::vector<ComplianceDocument>& getComplianceDocuments() const;
