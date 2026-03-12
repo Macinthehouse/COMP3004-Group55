@@ -1,19 +1,14 @@
 #include "Waitlist.h"
 
-// --------------------------------------------------
 // Default Constructor
-// --------------------------------------------------
 // Required for STL container usage.
-// --------------------------------------------------
 
 Waitlist::Waitlist()
     : category(VendorCategory::FOOD)
 {
 }
 
-// --------------------------------------------------
 // Parameterized Constructor
-// --------------------------------------------------
 
 Waitlist::Waitlist(const std::string& marketDateId,
                    VendorCategory category)
@@ -22,18 +17,14 @@ Waitlist::Waitlist(const std::string& marketDateId,
 {
 }
 
-// --------------------------------------------------
 // enqueue()
-// --------------------------------------------------
 
 void Waitlist::enqueue(const std::string& vendorId)
 {
     queue.push_back(vendorId);
 }
 
-// --------------------------------------------------
 // dequeue()
-// --------------------------------------------------
 
 std::string Waitlist::dequeue()
 {
@@ -47,9 +38,7 @@ std::string Waitlist::dequeue()
     return frontVendor;
 }
 
-// --------------------------------------------------
 // remove()
-// --------------------------------------------------
 
 void Waitlist::remove(const std::string& vendorId)
 {
@@ -61,9 +50,7 @@ void Waitlist::remove(const std::string& vendorId)
     }
 }
 
-// --------------------------------------------------
 // containsVendor()
-// --------------------------------------------------
 
 bool Waitlist::containsVendor(const std::string& vendorId) const
 {
@@ -75,9 +62,7 @@ bool Waitlist::containsVendor(const std::string& vendorId) const
     return false;
 }
 
-// --------------------------------------------------
 // getPosition()
-// --------------------------------------------------
 
 int Waitlist::getPosition(const std::string& vendorId) const
 {
@@ -89,18 +74,14 @@ int Waitlist::getPosition(const std::string& vendorId) const
     return -1;
 }
 
-// --------------------------------------------------
 // isEmpty()
-// --------------------------------------------------
 
 bool Waitlist::isEmpty() const
 {
     return queue.empty();
 }
 
-// --------------------------------------------------
 // Getters
-// --------------------------------------------------
 
 std::string Waitlist::getMarketDateId() const
 {
