@@ -207,13 +207,12 @@ void WaitlistController::handlePromotionIfNeeded(const std::string& marketDateId
 int WaitlistController::getWaitlistPosition(const std::string& userId, 
                                             const std::string& marketDateId, 
                                             VendorCategory category) {
-    // 1. Get the waitlist object from storage
+    // Get the waitlist object from storage
     Waitlist* wl = storage.getWaitlist(marketDateId, category);
     
-    // 2. If it doesn't exist, the position is 0
+    // If it doesn't exist, the position is 0
     if (!wl) return 0;
 
-    // 3. Use the built-in domain method!
     // This will return the 1-based index (1, 2, 3...) or 0 if not found.
     return wl->getPosition(userId);
 }
