@@ -3,29 +3,22 @@
 
 #include <string>
 
-// --------------------------------------------------
 // Notification Class
-// --------------------------------------------------
+
 // Represents a system-generated notification for a vendor.
 // Responsibilities:
 // - Store notification message
 // - Provide read-only access to message
-// --------------------------------------------------
 
 class Notification {
 public:
-    // --------------------------------------------------
-    // Constructors
-    // --------------------------------------------------
 
+    // Constructors
     Notification();  // Required for STL containers
 
     explicit Notification(const std::string& message);
 
-    // --------------------------------------------------
     // Getter
-    // --------------------------------------------------
-
     std::string getMessage() const;
 
 private:
