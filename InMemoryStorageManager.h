@@ -18,15 +18,11 @@
 // --------------------------------------------------
 // InMemoryStorageManager
 // --------------------------------------------------
-// Central in-memory storage for Deliverable 1.
+// Central in-memory storage
 // Responsible for storing:
 // - Users (Vendor, MarketOperator, SystemAdministrator)
 // - MarketDates
 // - Waitlists
-//
-// No business rules live here.
-// No UI logic.
-// Pure data storage.
 // --------------------------------------------------
 
 class InMemoryStorageManager {
