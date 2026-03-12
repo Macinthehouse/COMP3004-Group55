@@ -110,7 +110,7 @@ No password is required for login.
 ## Submission Contents
 
 - All source code files (.cpp and .h)  
-- Qt project file (**HintonMarket.pro**)  
+- Qt project file (`HintonMarket/HintonMarket.pro`)  
 - README containing setup and testing instructions  
 - System Decomposition Diagram (PDF)
 
