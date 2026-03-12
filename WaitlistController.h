@@ -30,9 +30,6 @@ struct WaitlistResult {
 // --------------------------------------------------
 // WaitlistController
 // --------------------------------------------------
-// Coordinates waitlist operations.
-// Only Vendors are allowed to join/leave waitlists.
-// --------------------------------------------------
 
 class WaitlistController {
 public:
