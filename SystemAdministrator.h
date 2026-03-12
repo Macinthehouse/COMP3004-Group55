@@ -11,12 +11,6 @@
 // Responsibilities:
 // - Identify as System Administrator
 // - Provide role name
-//
-// NOTE:
-// - No booking logic
-// - No waitlist logic
-// - No compliance logic
-// - Pure role-based user type
 // --------------------------------------------------
 
 class SystemAdministrator : public User {
