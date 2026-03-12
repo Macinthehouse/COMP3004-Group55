@@ -1,17 +1,12 @@
 #include "User.h"
 
-// --------------------------------------------------
 // Default Constructor
-// --------------------------------------------------
 
 User::User()
 {
 }
 
-// --------------------------------------------------
 // Parameterized Constructor
-// --------------------------------------------------
-
 User::User(const std::string& id,
            const std::string& name,
            const std::string& email,
@@ -25,9 +20,7 @@ User::User(const std::string& id,
 {
 }
 
-// --------------------------------------------------
 // Getters
-// --------------------------------------------------
 
 std::string User::getId() const
 {
