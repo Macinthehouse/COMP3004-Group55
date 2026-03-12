@@ -18,11 +18,6 @@
 // - Allow dequeue (remove from front)
 // - Allow removal by vendorId
 // - Provide queue position
-//
-// IMPORTANT:
-// - No controller logic
-// - No UI logic
-// - Pure domain entity
 // --------------------------------------------------
 
 class Waitlist {
