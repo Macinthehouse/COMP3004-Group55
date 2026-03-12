@@ -3,23 +3,19 @@
 
 #include <string>
 
-// --------------------------------------------------
+
 // ComplianceDocument Class
-// --------------------------------------------------
+
 // Represents a legal compliance document required
 // for vendors operating in HintonMarket.
-//
 // Responsibilities:
 // - Store document details
 // - Store expiry information
 // - Provide legal description text
-// --------------------------------------------------
 
 class ComplianceDocument {
 public:
-    // --------------------------------------------------
     // Constructors
-    // --------------------------------------------------
 
     ComplianceDocument();
 
@@ -28,18 +24,15 @@ public:
                        const std::string& expiryDate,
                        const std::string& legalText);
 
-    // --------------------------------------------------
     // Getters
-    // --------------------------------------------------
 
     std::string getDocumentName() const;
     std::string getDocumentNumber() const;
     std::string getExpiryDate() const;
     std::string getLegalText() const;
 
-    // --------------------------------------------------
+    
     // Utility
-    // --------------------------------------------------
 
     bool isValid() const;  // Simple expiry check
 
