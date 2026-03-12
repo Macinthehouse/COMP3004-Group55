@@ -3,22 +3,18 @@
 
 #include "User.h"
 
-// --------------------------------------------------
 // SystemAdministrator Class
-// --------------------------------------------------
+
 // Represents a System Administrator user.
 //
 // Responsibilities:
 // - Identify as System Administrator
 // - Provide role name
-// --------------------------------------------------
 
 class SystemAdministrator : public User {
 public:
-    // --------------------------------------------------
-    // Constructors
-    // --------------------------------------------------
 
+    // Constructors
     SystemAdministrator();
 
     SystemAdministrator(const std::string& id,
@@ -27,10 +23,7 @@ public:
                         const std::string& phone,
                         const std::string& address);
 
-    // --------------------------------------------------
     // Role Identification
-    // --------------------------------------------------
-
     std::string getRoleName() const override;
 };
 
