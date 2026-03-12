@@ -3,21 +3,17 @@
 
 #include "User.h"
 
-// --------------------------------------------------
 // MarketOperator Class
-// --------------------------------------------------
+
 // Represents a Market Operator user.
 //
 // Responsibilities:
 // - Identify as Market Operator
 // - Provide role name
-// --------------------------------------------------
 
 class MarketOperator : public User {
 public:
-    // --------------------------------------------------
     // Constructors
-    // --------------------------------------------------
 
     MarketOperator();
 
@@ -27,9 +23,7 @@ public:
                    const std::string& phone,
                    const std::string& address);
 
-    // --------------------------------------------------
     // Role Identification
-    // --------------------------------------------------
 
     std::string getRoleName() const override;
 };
