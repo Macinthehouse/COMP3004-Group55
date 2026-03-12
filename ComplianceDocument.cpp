@@ -50,10 +50,6 @@ std::string ComplianceDocument::getLegalText() const
 // --------------------------------------------------
 // isValid()
 // --------------------------------------------------
-// For Deliverable 1, we simplify validation.
-// In real systems, we'd compare dates properly.
-// Here we just check expiryDate is not empty.
-// --------------------------------------------------
 
 bool ComplianceDocument::isValid() const
 {
