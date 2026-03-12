@@ -1,16 +1,12 @@
 #include "ComplianceDocument.h"
 
-// --------------------------------------------------
 // Default Constructor
-// --------------------------------------------------
 
 ComplianceDocument::ComplianceDocument()
 {
 }
 
-// --------------------------------------------------
 // Parameterized Constructor
-// --------------------------------------------------
 
 ComplianceDocument::ComplianceDocument(const std::string& documentName,
                                        const std::string& documentNumber,
@@ -23,9 +19,7 @@ ComplianceDocument::ComplianceDocument(const std::string& documentName,
 {
 }
 
-// --------------------------------------------------
 // Getters
-// --------------------------------------------------
 
 std::string ComplianceDocument::getDocumentName() const
 {
@@ -47,9 +41,8 @@ std::string ComplianceDocument::getLegalText() const
     return legalText;
 }
 
-// --------------------------------------------------
 // isValid()
-// --------------------------------------------------
+
 
 bool ComplianceDocument::isValid() const
 {
