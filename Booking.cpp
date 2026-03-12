@@ -1,20 +1,15 @@
 #include "Booking.h"
 #include "VendorCategory.h"
 
-// --------------------------------------------------
 // Default Constructor
-// --------------------------------------------------
 // Required for use in STL containers (e.g., vector).
-// --------------------------------------------------
 
 Booking::Booking()
     : category(VendorCategory::FOOD) // Default value
 {
 }
 
-// --------------------------------------------------
 // Parameterized Constructor
-// --------------------------------------------------
 
 Booking::Booking(const std::string& vendorId,
                  const std::string& marketDateId,
@@ -25,9 +20,7 @@ Booking::Booking(const std::string& vendorId,
 {
 }
 
-// --------------------------------------------------
 // Getters
-// --------------------------------------------------
 
 std::string Booking::getVendorId() const
 {
