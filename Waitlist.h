@@ -5,20 +5,18 @@
 #include <vector>
 #include "VendorCategory.h"
 
-// --------------------------------------------------
 // Waitlist Class
-// --------------------------------------------------
+
 // Represents a waitlist for a specific:
 //      - MarketDate
 //      - VendorCategory (FOOD or ARTISAN)
-//
+
 // Responsibilities:
 // - Maintain FIFO ordering
 // - Allow enqueue (add to end)
 // - Allow dequeue (remove from front)
 // - Allow removal by vendorId
 // - Provide queue position
-// --------------------------------------------------
 
 class Waitlist {
 public:
