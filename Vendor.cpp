@@ -4,11 +4,9 @@
 #include "Notification.h"
 #include "ComplianceDocument.h"
 
-// --------------------------------------------------
+
 // Default Constructor
-// --------------------------------------------------
 // Required for use in STL containers.
-// --------------------------------------------------
 
 Vendor::Vendor()
     : User(),  // Call base class default constructor
@@ -16,12 +14,9 @@ Vendor::Vendor()
 {
 }
 
-// --------------------------------------------------
 // Parameterized Constructor
-// --------------------------------------------------
 // Initializes a vendor with full business information.
 // Identity fields are initialized via User base class.
-// --------------------------------------------------
 
 Vendor::Vendor(const std::string& id,
                const std::string& ownerName,
@@ -36,18 +31,14 @@ Vendor::Vendor(const std::string& id,
 {
 }
 
-// --------------------------------------------------
 // Role Identification
-// --------------------------------------------------
 
 std::string Vendor::getRoleName() const
 {
     return "Vendor";
 }
 
-// --------------------------------------------------
 // Vendor-Specific Getters
-// --------------------------------------------------
 
 std::string Vendor::getBusinessName() const
 {
@@ -59,9 +50,7 @@ VendorCategory Vendor::getCategory() const
     return category;
 }
 
-// --------------------------------------------------
 // Booking Management
-// --------------------------------------------------
 
 bool Vendor::hasBookingForDate(const std::string& marketDateId) const
 {
@@ -96,9 +85,7 @@ const std::vector<Booking>& Vendor::getBookings() const
     return bookings;
 }
 
-// --------------------------------------------------
 // Notification Management
-// --------------------------------------------------
 
 void Vendor::addNotification(const Notification& notification)
 {
@@ -110,9 +97,7 @@ const std::vector<Notification>& Vendor::getNotifications() const
     return notifications;
 }
 
-// --------------------------------------------------
 // Compliance Management
-// --------------------------------------------------
 
 void Vendor::addComplianceDocument(const ComplianceDocument& document)
 {
