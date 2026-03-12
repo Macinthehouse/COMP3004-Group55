@@ -40,9 +40,6 @@ std::string MarketDate::getDate() const
 // Enforces capacity rule:
 // - Maximum 2 FOOD vendors
 // - Maximum 2 ARTISAN vendors
-//
-// This is where the 2+2 rule lives.
-// Controllers must NOT manually count bookings.
 // --------------------------------------------------
 
 bool MarketDate::hasAvailableStall(VendorCategory category) const
@@ -73,10 +70,6 @@ bool MarketDate::hasAvailableStall(VendorCategory category) const
 // --------------------------------------------------
 // addBooking()
 // --------------------------------------------------
-// Defensive implementation:
-// Even if controller forgets to validate capacity,
-// this method will prevent exceeding stall limits.
-// --------------------------------------------------
 
 void MarketDate::addBooking(const Booking& booking)
 {
@@ -88,9 +81,6 @@ void MarketDate::addBooking(const Booking& booking)
 
 // --------------------------------------------------
 // removeBooking()
-// --------------------------------------------------
-// Removes booking associated with given vendorId.
-// Assumes one booking per vendor per date.
 // --------------------------------------------------
 
 void MarketDate::removeBooking(const std::string& vendorId)
