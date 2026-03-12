@@ -3,7 +3,7 @@
 **Team Number:** 55  
 
 ### Team Members
-- Hussain Almahooz – 101258192  
+- Hussain Almahoozi – 101258192  
 - Khalil Bruce – 101308601  
 - Shaswat Tyagi – 101263508  
 - Paimana Sultani – 101287827  
