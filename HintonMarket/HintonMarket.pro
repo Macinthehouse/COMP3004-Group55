@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -23,6 +23,12 @@ SOURCES += \
     ../Vendor.cpp \
     ../Waitlist.cpp \
     ../WaitlistController.cpp \
+    ../DatabaseManager.cpp \
+    ../UserRepository.cpp \
+    ../BookingRepository.cpp \
+    ../WaitlistRepository.cpp \
+    ../MarketDateRepository.cpp \
+    ../ComplianceDocumentRepository.cpp \
     BookingDialog.cpp \
     MarketScheduleUI.cpp \
     StartupUI.cpp \
@@ -47,6 +53,12 @@ HEADERS += \
     ../VendorCategory.h \
     ../Waitlist.h \
     ../WaitlistController.h \
+    ../DatabaseManager.h \
+    ../UserRepository.h \
+    ../BookingRepository.h \
+    ../WaitlistRepository.h \
+    ../MarketDateRepository.h \
+    ../ComplianceDocumentRepository.h \
     BookingDialog.h \
     MarketScheduleUI.h \
     StartupUI.h \
