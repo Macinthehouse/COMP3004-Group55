@@ -12,45 +12,52 @@
 #include "MarketOperator.h"
 #include "SystemAdministrator.h"
 #include "VendorCategory.h"
-#include "MarketDate.h"
+#include "MarketSchedule.h"
 #include "Waitlist.h"
 
 // InMemoryStorageManager
-
+//
 // Central in-memory storage
 // Responsible for storing:
 // - Users (Vendor, MarketOperator, SystemAdministrator)
-// - MarketDates
+// - MarketSchedule
 // - Waitlists
 
 class InMemoryStorageManager {
 public:
-    InMemoryStorageManager();   
+    InMemoryStorageManager();
 
     // Initialization
     void initializeDefaultData();
 
+    // Utility
+    void clear();
+
+    // Manual population helpers (useful for DB loading later)
+    void addUser(std::unique_ptr<User> user);
+    void addMarketDate(const MarketDate& marketDate);
+    void addWaitlist(const std::string& marketDateId,
+                     VendorCategory category,
+                     const Waitlist& waitlist);
+
     // User Access
     User* getUser(const std::string& userId);
-
     Vendor* getVendor(const std::string& userId);
 
     // MarketDate Access
     MarketDate* getMarketDate(const std::string& marketDateId);
+    std::vector<MarketDate*> getAllMarketDates();
 
     // Waitlist Access
     Waitlist* getWaitlist(const std::string& marketDateId,
                           VendorCategory category);
-    
-    // Return all the MarketDate objects
-    std::vector<MarketDate*> getAllMarketDates();
 
 private:
     // Polymorphic user storage
     std::unordered_map<std::string, std::unique_ptr<User>> users;
 
-    // MarketDates stored by YYYY-MM-DD
-    std::unordered_map<std::string, MarketDate> marketDates;
+    // MarketSchedule entity now owns MarketDate objects
+    MarketSchedule marketSchedule;
 
     // Waitlists stored by (date, category)
     std::map<std::pair<std::string, VendorCategory>, Waitlist> waitlists;
