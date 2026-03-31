@@ -5,6 +5,7 @@
 #include <QSqlError>
 #include <QVariant>
 #include <QDebug>
+#include <QList>
 
 bool DatabaseInitializer::initialize()
 {
@@ -152,23 +153,23 @@ bool DatabaseInitializer::seedUsers()
     };
 
     QList<UserSeed> users = {
-        // 4 Food Vendors
-        {"FV001", "Alice Brown", "alice@food.com", "613-111-0001", "101 Main St", "Vendor", "Alice Bakery", "FOOD"},
-        {"FV002", "Bob Green", "bob@food.com", "613-111-0002", "102 Main St", "Vendor", "Bob BBQ", "FOOD"},
-        {"FV003", "Carol White", "carol@food.com", "613-111-0003", "103 Main St", "Vendor", "Carol Catering", "FOOD"},
-        {"FV004", "David Black", "david@food.com", "613-111-0004", "104 Main St", "Vendor", "David Desserts", "FOOD"},
+        // Food Vendors
+        {"food_vendor_1", "Alice Smith", "alice@freshfarms.ca", "111-111-1111", "123 Farm Road", "Vendor", "Fresh Farms", "FOOD"},
+        {"food_vendor_2", "Bob Green", "bob@greengardens.ca", "222-222-2222", "456 Garden Ave", "Vendor", "Green Gardens", "FOOD"},
+        {"food_vendor_3", "Carol White", "carol@organic.ca", "333-333-3333", "789 Organic St", "Vendor", "Organic Delights", "FOOD"},
+        {"food_vendor_4", "David Brown", "david@harvest.ca", "444-444-4444", "101 Harvest Blvd", "Vendor", "Harvest Kitchen", "FOOD"},
 
-        // 4 Artisan Vendors
-        {"AV001", "Emma Stone", "emma@artisan.com", "613-222-0001", "201 Oak St", "Vendor", "Emma Crafts", "ARTISAN"},
-        {"AV002", "Frank Wood", "frank@artisan.com", "613-222-0002", "202 Oak St", "Vendor", "Frank Pottery", "ARTISAN"},
-        {"AV003", "Grace Hall", "grace@artisan.com", "613-222-0003", "203 Oak St", "Vendor", "Grace Handmade", "ARTISAN"},
-        {"AV004", "Henry King", "henry@artisan.com", "613-222-0004", "204 Oak St", "Vendor", "Henry Designs", "ARTISAN"},
+        // Artisan Vendors
+        {"artisan_vendor_1", "Emma Stone", "emma@crafts.ca", "555-555-5555", "12 Craft Lane", "Vendor", "Handmade Crafts", "ARTISAN"},
+        {"artisan_vendor_2", "Frank Miller", "frank@woodworks.ca", "666-666-6666", "34 Timber Rd", "Vendor", "WoodWorks", "ARTISAN"},
+        {"artisan_vendor_3", "Grace Lee", "grace@clay.ca", "777-777-7777", "56 Pottery Ave", "Vendor", "Clay Creations", "ARTISAN"},
+        {"artisan_vendor_4", "Henry Clark", "henry@designs.ca", "888-888-8888", "78 Design St", "Vendor", "Artisan Designs", "ARTISAN"},
 
         // Market Operator
-        {"MO001", "Market Operator", "operator@hintonmarket.com", "613-333-0001", "300 Market St", "MarketOperator", "", ""},
+        {"market_operator", "Market Admin", "operator@market.ca", "999-999-9999", "Market Office", "MarketOperator", "", ""},
 
         // System Administrator
-        {"SA001", "System Admin", "admin@hintonmarket.com", "613-333-0002", "301 Market St", "SystemAdministrator", "", ""}
+        {"system_admin", "System Admin", "admin@market.ca", "000-000-0000", "Admin Office", "SystemAdministrator", "", ""}
     };
 
     query.prepare(
@@ -208,10 +209,10 @@ bool DatabaseInitializer::seedMarketDates()
     };
 
     QList<MarketDateSeed> dates = {
-        {"MD001", 1, "2026-04-04", 2, 2},
-        {"MD002", 2, "2026-04-11", 2, 2},
-        {"MD003", 3, "2026-04-18", 2, 2},
-        {"MD004", 4, "2026-04-25", 2, 2}
+        {"2026-04-01", 1, "2026-04-01", 2, 2},
+        {"2026-04-08", 2, "2026-04-08", 2, 2},
+        {"2026-04-15", 3, "2026-04-15", 2, 2},
+        {"2026-04-22", 4, "2026-04-22", 2, 2}
     };
 
     query.prepare(
@@ -247,14 +248,29 @@ bool DatabaseInitializer::seedComplianceDocuments()
     };
 
     QList<ComplianceSeed> docs = {
-        {"FV001", "Food License", "FL-1001", "2027-12-31"},
-        {"FV002", "Food License", "FL-1002", "2027-12-31"},
-        {"FV003", "Food License", "FL-1003", "2027-12-31"},
-        {"FV004", "Food License", "FL-1004", "2027-12-31"},
-        {"AV001", "Artisan Policy", "AP-2001", "2027-12-31"},
-        {"AV002", "Artisan Policy", "AP-2002", "2027-12-31"},
-        {"AV003", "Artisan Policy", "AP-2003", "2027-12-31"},
-        {"AV004", "Artisan Policy", "AP-2004", "2027-12-31"}
+        {"food_vendor_1", "Food Handling License", "FH-2026-001", "2027-12-31"},
+        {"food_vendor_1", "Liability Insurance Policy", "LI-2026-034", "2027-05-15"},
+
+        {"food_vendor_2", "Food Handling License", "FH-2026-002", "2027-12-31"},
+        {"food_vendor_2", "Liability Insurance Policy", "LI-2026-035", "2027-05-15"},
+
+        {"food_vendor_3", "Food Handling License", "FH-2026-003", "2027-12-31"},
+        {"food_vendor_3", "Liability Insurance Policy", "LI-2026-036", "2027-05-15"},
+
+        {"food_vendor_4", "Food Handling License", "FH-2026-004", "2027-12-31"},
+        {"food_vendor_4", "Liability Insurance Policy", "LI-2026-037", "2027-05-15"},
+
+        {"artisan_vendor_1", "Food Handling License", "FH-2026-005", "2027-12-31"},
+        {"artisan_vendor_1", "Liability Insurance Policy", "LI-2026-038", "2027-05-15"},
+
+        {"artisan_vendor_2", "Food Handling License", "FH-2026-006", "2027-12-31"},
+        {"artisan_vendor_2", "Liability Insurance Policy", "LI-2026-039", "2027-05-15"},
+
+        {"artisan_vendor_3", "Food Handling License", "FH-2026-007", "2027-12-31"},
+        {"artisan_vendor_3", "Liability Insurance Policy", "LI-2026-040", "2027-05-15"},
+
+        {"artisan_vendor_4", "Food Handling License", "FH-2026-008", "2027-12-31"},
+        {"artisan_vendor_4", "Liability Insurance Policy", "LI-2026-041", "2027-05-15"}
     };
 
     query.prepare(
@@ -269,7 +285,7 @@ bool DatabaseInitializer::seedComplianceDocuments()
         query.bindValue(":expiry_date", doc.expiryDate);
 
         if (!query.exec()) {
-            qDebug() << "Failed to insert compliance document for vendor:" 
+            qDebug() << "Failed to insert compliance document for vendor:"
                      << doc.vendorId << query.lastError().text();
             return false;
         }
