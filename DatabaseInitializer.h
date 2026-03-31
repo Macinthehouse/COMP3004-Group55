@@ -16,4 +16,5 @@ private:
     bool seedMarketDates();
     bool seedComplianceDocuments();
 };
+
 #endif // DATABASEINITIALIZER_H
