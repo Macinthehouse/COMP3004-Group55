@@ -56,16 +56,17 @@ bool DatabaseInitializer::createTables()
         ")"
     );
 
-    ok = ok && query.exec(
-        "CREATE TABLE IF NOT EXISTS compliance_documents ("
-        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-        "vendor_id TEXT NOT NULL,"
-        "document_type TEXT NOT NULL,"
-        "document_number TEXT NOT NULL,"
-        "expiry_date TEXT NOT NULL,"
-        "FOREIGN KEY(vendor_id) REFERENCES users(id)"
-        ")"
-    );
+   ok = ok && query.exec(
+    "CREATE TABLE IF NOT EXISTS compliance_documents ("
+    "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+    "vendor_id TEXT NOT NULL,"
+    "document_type TEXT NOT NULL,"
+    "document_number TEXT NOT NULL,"
+    "expiry_date TEXT NOT NULL,"
+    "legal_text TEXT NOT NULL,"
+    "FOREIGN KEY(vendor_id) REFERENCES users(id)"
+    ")"
+);
 
     ok = ok && query.exec(
         "CREATE TABLE IF NOT EXISTS bookings ("
