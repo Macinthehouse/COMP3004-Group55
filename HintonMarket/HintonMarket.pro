@@ -16,6 +16,7 @@ SOURCES += \
     ../InMemoryStorageManager.cpp \
     ../LoginController.cpp \
     ../MarketDate.cpp \
+    ../MarketSchedule.cpp \
     ../MarketOperator.cpp \
     ../Notification.cpp \
     ../SystemAdministrator.cpp \
@@ -46,6 +47,7 @@ HEADERS += \
     ../InMemoryStorageManager.h \
     ../LoginController.h \
     ../MarketDate.h \
+    ../MarketSchedule.h \
     ../MarketOperator.h \
     ../Notification.h \
     ../SystemAdministrator.h \
