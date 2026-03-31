@@ -1,6 +1,9 @@
 #include <QApplication>
+#include <QCoreApplication>
 #include <iostream>
 
+#include "DatabaseManager.h"
+#include "DatabaseInitializer.h"
 #include "InMemoryStorageManager.h"
 #include "BookingController.h"
 #include "WaitlistController.h"
@@ -10,38 +13,37 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    // Central In-Memory Storage
-    
-    // Stores:
-    // - Polymorphic Users (Vendor, MarketOperator, SystemAdministrator)
-    // - MarketDates
-    // - Waitlists
+    QString dbPath = QCoreApplication::applicationDirPath() + "/hintonMarket.sqlite3";
+
+    if (!DatabaseManager::instance().openDatabase(dbPath)) {
+        std::cerr << "Failed to open SQLite database: "
+                  << DatabaseManager::instance().lastError().toStdString()
+                  << std::endl;
+        return 1;
+    }
+
+    DatabaseInitializer initializer;
+    if (!initializer.initialize()) {
+        std::cerr << "Failed to initialize database." << std::endl;
+        return 1;
+    }
 
     InMemoryStorageManager storage;
 
-    // Default Data
-    // Creates:
-    // - 4 Market Dates (2 Food + 2 Artisan capacity)
-    // - 8 Waitlists (4 dates × 2 categories)
-    // - 4 Food Vendors
-    // - 4 Artisan Vendors
-    // - 1 MarketOperator
-    // - 1 SystemAdministrator
-    //
-    // All stored polymorphically as std::unique_ptr<User>
-    storage.initializeDefaultData();
+    // New D2 behavior:
+    // Load persisted users, market dates, waitlists, bookings, etc.
+    // from SQLite into in-memory objects.
+    if (!storage.loadFromDatabase()) {
+        std::cerr << "Failed to load data from database into memory." << std::endl;
+        return 1;
+    }
 
-    // Controllers
-    
-    // Controllers depend on storage
-    // BookingController depends on WaitlistController
-    // ------------------------------------------------
     WaitlistController waitlistController(storage);
     BookingController bookingController(storage, waitlistController);
     LoginController loginController(&storage);
 
-    // Backend Ready
-    std::cout << "HintonMarket backend initialized successfully." << std::endl;
+    std::cout << "HintonMarket backend initialized successfully with SQLite persistence."
+              << std::endl;
 
     return 0;
 }
