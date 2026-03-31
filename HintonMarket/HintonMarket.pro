@@ -24,6 +24,7 @@ SOURCES += \
     ../Waitlist.cpp \
     ../WaitlistController.cpp \
     ../DatabaseManager.cpp \
+    ../DatabaseInitializer.cpp \
     ../UserRepository.cpp \
     ../BookingRepository.cpp \
     ../WaitlistRepository.cpp \
@@ -54,6 +55,7 @@ HEADERS += \
     ../Waitlist.h \
     ../WaitlistController.h \
     ../DatabaseManager.h \
+    ../DatabaseInitializer.h \
     ../UserRepository.h \
     ../BookingRepository.h \
     ../WaitlistRepository.h \
