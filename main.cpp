@@ -1,5 +1,7 @@
 #include <QApplication>
 #include <QCoreApplication>
+#include <QFileInfo>
+#include <QString>
 #include <iostream>
 
 #include "DatabaseManager.h"
@@ -8,12 +10,37 @@
 #include "BookingController.h"
 #include "WaitlistController.h"
 #include "LoginController.h"
+#include "StartupUI.h"
+
+namespace
+{
+    QString findDatabasePath()
+    {
+        const QString basePath = QCoreApplication::applicationDirPath();
+
+        QStringList candidatePaths = {
+            basePath + "/hintonMarket.sqlite3",
+            basePath + "/../hintonMarket.sqlite3",
+            basePath + "/../../hintonMarket.sqlite3",
+            basePath + "/../../../hintonMarket.sqlite3"
+        };
+
+        for (const QString& path : candidatePaths) {
+            if (QFileInfo::exists(path)) {
+                return QFileInfo(path).absoluteFilePath();
+            }
+        }
+
+        // If it does not exist yet, create it in the app directory.
+        return basePath + "/hintonMarket.sqlite3";
+    }
+}
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QString dbPath = QCoreApplication::applicationDirPath() + "/hintonMarket.sqlite3";
+    QString dbPath = findDatabasePath();
 
     if (!DatabaseManager::instance().openDatabase(dbPath)) {
         std::cerr << "Failed to open SQLite database: "
@@ -29,7 +56,6 @@ int main(int argc, char *argv[])
     }
 
     InMemoryStorageManager storage;
-
     if (!storage.loadFromDatabase()) {
         std::cerr << "Failed to load data from database into memory." << std::endl;
         return 1;
@@ -42,11 +68,8 @@ int main(int argc, char *argv[])
     std::cout << "HintonMarket backend initialized successfully with SQLite persistence."
               << std::endl;
 
-    // TODO:
-    // Create and show your StartupUI / main window here
-    // Example:
-    // StartupUI startup;
-    // startup.show();
+    StartupUI startup;
+    startup.show();
 
     return app.exec();
 }
