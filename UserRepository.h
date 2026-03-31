@@ -11,8 +11,6 @@ class UserRepository
 {
 public:
     std::unique_ptr<User> findById(const std::string& id);
-    std::unique_ptr<User> findByName(const std::string& name);
-
     std::vector<std::unique_ptr<User>> loadAllUsers();
 };
 
