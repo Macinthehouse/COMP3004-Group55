@@ -11,12 +11,11 @@ class StartupUI : public QWidget {
 public:
     explicit StartupUI(QWidget* parent = nullptr);
 
-    QString username() const;
-    void setUsername(const QString& text);
-    void clear();
-
+    QString userId() const;
+void setUserId(const QString& text);
+QLineEdit* m_userIdEdit{};
 signals:
-    void loginRequested(const QString& username);
+    void loginRequested(const QString& userId);
 
 private:
     QLineEdit* m_usernameEdit{};
