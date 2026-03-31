@@ -29,11 +29,12 @@ public:
 
     // Initialization
     void initializeDefaultData();
+    bool loadFromDatabase();
 
     // Utility
     void clear();
 
-    // Manual population helpers (useful for DB loading later)
+    // Manual population helpers
     void addUser(std::unique_ptr<User> user);
     void addMarketDate(const MarketDate& marketDate);
     void addWaitlist(const std::string& marketDateId,
@@ -53,13 +54,8 @@ public:
                           VendorCategory category);
 
 private:
-    // Polymorphic user storage
     std::unordered_map<std::string, std::unique_ptr<User>> users;
-
-    // MarketSchedule entity now owns MarketDate objects
     MarketSchedule marketSchedule;
-
-    // Waitlists stored by (date, category)
     std::map<std::pair<std::string, VendorCategory>, Waitlist> waitlists;
 };
 
