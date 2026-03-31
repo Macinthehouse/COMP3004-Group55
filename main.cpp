@@ -30,9 +30,6 @@ int main(int argc, char *argv[])
 
     InMemoryStorageManager storage;
 
-    // New D2 behavior:
-    // Load persisted users, market dates, waitlists, bookings, etc.
-    // from SQLite into in-memory objects.
     if (!storage.loadFromDatabase()) {
         std::cerr << "Failed to load data from database into memory." << std::endl;
         return 1;
@@ -45,5 +42,11 @@ int main(int argc, char *argv[])
     std::cout << "HintonMarket backend initialized successfully with SQLite persistence."
               << std::endl;
 
-    return 0;
+    // TODO:
+    // Create and show your StartupUI / main window here
+    // Example:
+    // StartupUI startup;
+    // startup.show();
+
+    return app.exec();
 }
