@@ -10,7 +10,7 @@ public:
     LoginController(InMemoryStorageManager* storage);
     
     // The UI calls this to verify a user
-    User* login(const std::string& username);
+  User* login(const std::string& userId);
 
 private:
     InMemoryStorageManager* storage;
