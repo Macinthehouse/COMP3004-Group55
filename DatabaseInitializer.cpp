@@ -56,17 +56,17 @@ bool DatabaseInitializer::createTables()
         ")"
     );
 
-   ok = ok && query.exec(
-    "CREATE TABLE IF NOT EXISTS compliance_documents ("
-    "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-    "vendor_id TEXT NOT NULL,"
-    "document_type TEXT NOT NULL,"
-    "document_number TEXT NOT NULL,"
-    "expiry_date TEXT NOT NULL,"
-    "legal_text TEXT NOT NULL,"
-    "FOREIGN KEY(vendor_id) REFERENCES users(id)"
-    ")"
-);
+    ok = ok && query.exec(
+        "CREATE TABLE IF NOT EXISTS compliance_documents ("
+        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "vendor_id TEXT NOT NULL,"
+        "document_type TEXT NOT NULL,"
+        "document_number TEXT NOT NULL,"
+        "expiry_date TEXT NOT NULL,"
+        "legal_text TEXT NOT NULL,"
+        "FOREIGN KEY(vendor_id) REFERENCES users(id)"
+        ")"
+    );
 
     ok = ok && query.exec(
         "CREATE TABLE IF NOT EXISTS bookings ("
@@ -246,37 +246,55 @@ bool DatabaseInitializer::seedComplianceDocuments()
         QString documentType;
         QString documentNumber;
         QString expiryDate;
+        QString legalText;
     };
 
     QList<ComplianceSeed> docs = {
-        {"food_vendor_1", "Food Handling License", "FH-2026-001", "2027-12-31"},
-        {"food_vendor_1", "Liability Insurance Policy", "LI-2026-034", "2027-05-15"},
+        {"food_vendor_1", "Food Handling License", "FH-2026-001", "2027-12-31",
+         "Vendor must comply with all food safety regulations and maintain sanitary handling procedures."},
+        {"food_vendor_1", "Liability Insurance Policy", "LI-2026-034", "2027-05-15",
+         "Vendor must maintain active liability insurance covering stall operations and related claims."},
 
-        {"food_vendor_2", "Food Handling License", "FH-2026-002", "2027-12-31"},
-        {"food_vendor_2", "Liability Insurance Policy", "LI-2026-035", "2027-05-15"},
+        {"food_vendor_2", "Food Handling License", "FH-2026-002", "2027-12-31",
+         "Vendor must comply with all food safety regulations and maintain sanitary handling procedures."},
+        {"food_vendor_2", "Liability Insurance Policy", "LI-2026-035", "2027-05-15",
+         "Vendor must maintain active liability insurance covering stall operations and related claims."},
 
-        {"food_vendor_3", "Food Handling License", "FH-2026-003", "2027-12-31"},
-        {"food_vendor_3", "Liability Insurance Policy", "LI-2026-036", "2027-05-15"},
+        {"food_vendor_3", "Food Handling License", "FH-2026-003", "2027-12-31",
+         "Vendor must comply with all food safety regulations and maintain sanitary handling procedures."},
+        {"food_vendor_3", "Liability Insurance Policy", "LI-2026-036", "2027-05-15",
+         "Vendor must maintain active liability insurance covering stall operations and related claims."},
 
-        {"food_vendor_4", "Food Handling License", "FH-2026-004", "2027-12-31"},
-        {"food_vendor_4", "Liability Insurance Policy", "LI-2026-037", "2027-05-15"},
+        {"food_vendor_4", "Food Handling License", "FH-2026-004", "2027-12-31",
+         "Vendor must comply with all food safety regulations and maintain sanitary handling procedures."},
+        {"food_vendor_4", "Liability Insurance Policy", "LI-2026-037", "2027-05-15",
+         "Vendor must maintain active liability insurance covering stall operations and related claims."},
 
-        {"artisan_vendor_1", "Food Handling License", "FH-2026-005", "2027-12-31"},
-        {"artisan_vendor_1", "Liability Insurance Policy", "LI-2026-038", "2027-05-15"},
+        {"artisan_vendor_1", "Food Handling License", "FH-2026-005", "2027-12-31",
+         "Vendor must comply with all food safety regulations and maintain sanitary handling procedures."},
+        {"artisan_vendor_1", "Liability Insurance Policy", "LI-2026-038", "2027-05-15",
+         "Vendor must maintain active liability insurance covering stall operations and related claims."},
 
-        {"artisan_vendor_2", "Food Handling License", "FH-2026-006", "2027-12-31"},
-        {"artisan_vendor_2", "Liability Insurance Policy", "LI-2026-039", "2027-05-15"},
+        {"artisan_vendor_2", "Food Handling License", "FH-2026-006", "2027-12-31",
+         "Vendor must comply with all food safety regulations and maintain sanitary handling procedures."},
+        {"artisan_vendor_2", "Liability Insurance Policy", "LI-2026-039", "2027-05-15",
+         "Vendor must maintain active liability insurance covering stall operations and related claims."},
 
-        {"artisan_vendor_3", "Food Handling License", "FH-2026-007", "2027-12-31"},
-        {"artisan_vendor_3", "Liability Insurance Policy", "LI-2026-040", "2027-05-15"},
+        {"artisan_vendor_3", "Food Handling License", "FH-2026-007", "2027-12-31",
+         "Vendor must comply with all food safety regulations and maintain sanitary handling procedures."},
+        {"artisan_vendor_3", "Liability Insurance Policy", "LI-2026-040", "2027-05-15",
+         "Vendor must maintain active liability insurance covering stall operations and related claims."},
 
-        {"artisan_vendor_4", "Food Handling License", "FH-2026-008", "2027-12-31"},
-        {"artisan_vendor_4", "Liability Insurance Policy", "LI-2026-041", "2027-05-15"}
+        {"artisan_vendor_4", "Food Handling License", "FH-2026-008", "2027-12-31",
+         "Vendor must comply with all food safety regulations and maintain sanitary handling procedures."},
+        {"artisan_vendor_4", "Liability Insurance Policy", "LI-2026-041", "2027-05-15",
+         "Vendor must maintain active liability insurance covering stall operations and related claims."}
     };
 
     query.prepare(
-        "INSERT INTO compliance_documents (vendor_id, document_type, document_number, expiry_date) "
-        "VALUES (:vendor_id, :document_type, :document_number, :expiry_date)"
+        "INSERT INTO compliance_documents "
+        "(vendor_id, document_type, document_number, expiry_date, legal_text) "
+        "VALUES (:vendor_id, :document_type, :document_number, :expiry_date, :legal_text)"
     );
 
     for (const ComplianceSeed& doc : docs) {
@@ -284,6 +302,7 @@ bool DatabaseInitializer::seedComplianceDocuments()
         query.bindValue(":document_type", doc.documentType);
         query.bindValue(":document_number", doc.documentNumber);
         query.bindValue(":expiry_date", doc.expiryDate);
+        query.bindValue(":legal_text", doc.legalText);
 
         if (!query.exec()) {
             qDebug() << "Failed to insert compliance document for vendor:"
