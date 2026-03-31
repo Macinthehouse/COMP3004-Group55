@@ -9,6 +9,7 @@
 #include "MarketDateRepository.h"
 #include "ComplianceDocumentRepository.h"
 #include "BookingRepository.h"
+#include "WaitlistRepository.h"
 
 #include <vector>
 #include <utility>
@@ -211,6 +212,7 @@ bool InMemoryStorageManager::loadFromDatabase()
     MarketDateRepository marketDateRepository;
     ComplianceDocumentRepository complianceDocumentRepository;
     BookingRepository bookingRepository;
+    WaitlistRepository waitlistRepository;
 
     // 1. Load all users
     std::vector<std::unique_ptr<User>> loadedUsers = userRepository.loadAllUsers();
@@ -224,7 +226,13 @@ bool InMemoryStorageManager::loadFromDatabase()
         addMarketDate(marketDate);
     }
 
-    // 3. Create the 8 in-memory waitlists (4 weeks x 2 categories)
+    // 3. Load persisted waitlists from database
+    std::vector<Waitlist> loadedWaitlists = waitlistRepository.loadAllWaitlists();
+    for (const auto& waitlist : loadedWaitlists) {
+        addWaitlist(waitlist.getMarketDateId(), waitlist.getCategory(), waitlist);
+    }
+
+    // 4. Ensure all 8 waitlists exist, even if some are empty in the DB
     std::vector<MarketDate*> dates = getAllMarketDates();
     for (MarketDate* marketDate : dates) {
         if (!marketDate) {
@@ -233,11 +241,16 @@ bool InMemoryStorageManager::loadFromDatabase()
 
         const std::string dateId = marketDate->getDate();
 
-        addWaitlist(dateId, VendorCategory::FOOD, Waitlist(dateId, VendorCategory::FOOD));
-        addWaitlist(dateId, VendorCategory::ARTISAN, Waitlist(dateId, VendorCategory::ARTISAN));
+        if (!getWaitlist(dateId, VendorCategory::FOOD)) {
+            addWaitlist(dateId, VendorCategory::FOOD, Waitlist(dateId, VendorCategory::FOOD));
+        }
+
+        if (!getWaitlist(dateId, VendorCategory::ARTISAN)) {
+            addWaitlist(dateId, VendorCategory::ARTISAN, Waitlist(dateId, VendorCategory::ARTISAN));
+        }
     }
 
-    // 4. Attach compliance documents to each vendor
+    // 5. Attach compliance documents to each vendor
     for (auto& pair : users) {
         Vendor* vendor = dynamic_cast<Vendor*>(pair.second.get());
         if (!vendor) {
@@ -252,7 +265,7 @@ bool InMemoryStorageManager::loadFromDatabase()
         }
     }
 
-    // 5. Load bookings and attach them to both Vendor and MarketDate
+    // 6. Load bookings and attach them to both Vendor and MarketDate
     std::vector<Booking> bookings = bookingRepository.loadAllBookings();
     for (const auto& booking : bookings) {
         Vendor* vendor = getVendor(booking.getVendorId());
