@@ -41,7 +41,7 @@ namespace
 
             return std::make_unique<Vendor>(
                 id,
-                name,          // ownerName
+                name,   // ownerName
                 email,
                 phone,
                 address,
@@ -87,28 +87,6 @@ std::unique_ptr<User> UserRepository::findById(const std::string& id)
 
     if (!query.exec()) {
         qDebug() << "findById query failed:" << query.lastError().text();
-        return nullptr;
-    }
-
-    if (!query.next()) {
-        return nullptr;
-    }
-
-    return buildUserFromQuery(query);
-}
-
-std::unique_ptr<User> UserRepository::findByName(const std::string& name)
-{
-    QSqlQuery query(DatabaseManager::instance().database());
-    query.prepare(
-        "SELECT id, name, email, phone, address, role, business_name, vendor_category "
-        "FROM users "
-        "WHERE name = :name"
-    );
-    query.bindValue(":name", QString::fromStdString(name));
-
-    if (!query.exec()) {
-        qDebug() << "findByName query failed:" << query.lastError().text();
         return nullptr;
     }
 
