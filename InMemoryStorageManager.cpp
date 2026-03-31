@@ -5,6 +5,11 @@
 #include "SystemAdministrator.h"
 #include "ComplianceDocument.h"
 
+#include "UserRepository.h"
+#include "MarketDateRepository.h"
+#include "ComplianceDocumentRepository.h"
+#include "BookingRepository.h"
+
 #include <vector>
 #include <utility>
 #include <memory>
@@ -31,7 +36,6 @@ void InMemoryStorageManager::initializeDefaultData()
     clear();
 
     // Create Market Dates
-
     std::vector<std::string> dates = {
         "2026-04-01",
         "2026-04-08",
@@ -136,7 +140,6 @@ void InMemoryStorageManager::initializeDefaultData()
     ));
 
     // Market Operator
-
     users["market_operator"] = std::unique_ptr<User>(new MarketOperator(
         "market_operator",
         "Market Admin",
@@ -146,7 +149,6 @@ void InMemoryStorageManager::initializeDefaultData()
     ));
 
     // System Administrator
-
     users["system_admin"] = std::unique_ptr<User>(new SystemAdministrator(
         "system_admin",
         "System Admin",
@@ -197,6 +199,75 @@ void InMemoryStorageManager::initializeDefaultData()
             vendor->addComplianceDocument(liabilityInsurance);
         }
     }
+}
+
+// loadFromDatabase()
+
+bool InMemoryStorageManager::loadFromDatabase()
+{
+    clear();
+
+    UserRepository userRepository;
+    MarketDateRepository marketDateRepository;
+    ComplianceDocumentRepository complianceDocumentRepository;
+    BookingRepository bookingRepository;
+
+    // 1. Load all users
+    std::vector<std::unique_ptr<User>> loadedUsers = userRepository.loadAllUsers();
+    for (auto& user : loadedUsers) {
+        addUser(std::move(user));
+    }
+
+    // 2. Load all market dates into MarketSchedule
+    std::vector<MarketDate> loadedDates = marketDateRepository.loadAllMarketDates();
+    for (const auto& marketDate : loadedDates) {
+        addMarketDate(marketDate);
+    }
+
+    // 3. Create the 8 in-memory waitlists (4 weeks x 2 categories)
+    std::vector<MarketDate*> dates = getAllMarketDates();
+    for (MarketDate* marketDate : dates) {
+        if (!marketDate) {
+            continue;
+        }
+
+        const std::string dateId = marketDate->getDate();
+
+        addWaitlist(dateId, VendorCategory::FOOD, Waitlist(dateId, VendorCategory::FOOD));
+        addWaitlist(dateId, VendorCategory::ARTISAN, Waitlist(dateId, VendorCategory::ARTISAN));
+    }
+
+    // 4. Attach compliance documents to each vendor
+    for (auto& pair : users) {
+        Vendor* vendor = dynamic_cast<Vendor*>(pair.second.get());
+        if (!vendor) {
+            continue;
+        }
+
+        std::vector<ComplianceDocument> documents =
+            complianceDocumentRepository.loadDocumentsForVendor(vendor->getId());
+
+        for (const auto& document : documents) {
+            vendor->addComplianceDocument(document);
+        }
+    }
+
+    // 5. Load bookings and attach them to both Vendor and MarketDate
+    std::vector<Booking> bookings = bookingRepository.loadAllBookings();
+    for (const auto& booking : bookings) {
+        Vendor* vendor = getVendor(booking.getVendorId());
+        MarketDate* marketDate = getMarketDate(booking.getMarketDateId());
+
+        if (vendor) {
+            vendor->addBooking(booking);
+        }
+
+        if (marketDate) {
+            marketDate->addBooking(booking);
+        }
+    }
+
+    return true;
 }
 
 // addUser()
