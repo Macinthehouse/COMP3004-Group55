@@ -11,9 +11,17 @@ namespace
 {
     VendorCategory parseVendorCategory(const QString& categoryText)
     {
-        if (categoryText.toUpper() == "ARTISAN") {
+        const QString normalized = categoryText.trimmed().toUpper();
+
+        if (normalized == "FOOD") {
+            return VendorCategory::FOOD;
+        }
+
+        if (normalized == "ARTISAN") {
             return VendorCategory::ARTISAN;
         }
+
+        qDebug() << "Unknown vendor category in bookings query:" << categoryText;
         return VendorCategory::FOOD;
     }
 }
