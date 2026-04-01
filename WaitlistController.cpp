@@ -11,6 +11,7 @@
 #include "WaitlistRepository.h"
 #include "NotificationRepository.h"
 
+#include <QDebug>
 #include <string>
 #include <vector>
 
@@ -49,9 +50,10 @@ WaitlistResult WaitlistController::joinWaitlist(const std::string& userId,
 
     VendorCategory category = vendor->getCategory();
 
-    if (vendor->hasBookingForDate(marketDateId)) {
+    // Keep this consistent with BookingController and D2
+    if (!vendor->getBookings().empty()) {
         return { WaitlistResultType::ALREADY_BOOKED,
-                 "Vendor already booked for this date.",
+                 "Vendor already has an active booking.",
                  -1 };
     }
 
@@ -87,16 +89,18 @@ WaitlistResult WaitlistController::joinWaitlist(const std::string& userId,
 
     *waitlist = updatedWaitlist;
 
-    std::string message =
+    const std::string message =
         "You have been added to the waitlist for market date "
         + marketDateId +
         ". Current position: " + std::to_string(position);
 
-    Notification notification(message);
-    vendor->addNotification(notification);
+    vendor->addNotification(Notification(message));
 
     NotificationRepository notificationRepository;
-    notificationRepository.addNotification(userId, message);
+    if (!notificationRepository.addNotification(userId, message)) {
+        qDebug() << "Waitlist join notification could not be saved for vendor:"
+                 << QString::fromStdString(userId);
+    }
 
     return { WaitlistResultType::SUCCESS,
              "Added to waitlist.",
@@ -144,7 +148,7 @@ WaitlistResult WaitlistController::leaveWaitlist(const std::string& userId,
                  -1 };
     }
 
-    const int removedPos = waitlist->getPosition(userId); // 1-based
+    const int removedPos = waitlist->getPosition(userId);
 
     Waitlist updatedWaitlist = *waitlist;
     updatedWaitlist.remove(userId);
@@ -158,17 +162,18 @@ WaitlistResult WaitlistController::leaveWaitlist(const std::string& userId,
 
     *waitlist = updatedWaitlist;
 
-    // everyone who was behind removedPos moves up by 1
     notifyVendorsMovedUp(marketDateId, category, removedPos);
 
-    std::string message =
+    const std::string message =
         "You have been removed from the waitlist for market date " + marketDateId;
 
-    Notification notification(message);
-    vendor->addNotification(notification);
+    vendor->addNotification(Notification(message));
 
     NotificationRepository notificationRepository;
-    notificationRepository.addNotification(userId, message);
+    if (!notificationRepository.addNotification(userId, message)) {
+        qDebug() << "Waitlist leave notification could not be saved for vendor:"
+                 << QString::fromStdString(userId);
+    }
 
     return { WaitlistResultType::SUCCESS,
              "Removed from waitlist.",
@@ -191,7 +196,6 @@ void WaitlistController::handlePromotionIfNeeded(const std::string& marketDateId
     WaitlistRepository waitlistRepository;
     NotificationRepository notificationRepository;
 
-    // Find first eligible vendor at head of queue (skip invalid/stale entries)
     while (!waitlist->isEmpty()) {
         const std::string nextVendorId = waitlist->peekNextVendorId();
         if (nextVendorId.empty()) return;
@@ -212,7 +216,7 @@ void WaitlistController::handlePromotionIfNeeded(const std::string& marketDateId
             continue;
         }
 
-        // Skip vendors who already hold any active booking
+        // Stay consistent with one-active-booking rule
         if (!vendor->getBookings().empty()) {
             Waitlist updatedWaitlist = *waitlist;
             updatedWaitlist.dequeue();
@@ -226,13 +230,17 @@ void WaitlistController::handlePromotionIfNeeded(const std::string& marketDateId
             continue;
         }
 
-        std::string message =
+        const std::string message =
             "A stall is now available for " + marketDateId +
             ". You are next in line—please book.";
 
-        Notification notification(message);
-        vendor->addNotification(notification);
-        notificationRepository.addNotification(nextVendorId, message);
+        vendor->addNotification(Notification(message));
+
+        if (!notificationRepository.addNotification(nextVendorId, message)) {
+            qDebug() << "Promotion notification could not be saved for vendor:"
+                     << QString::fromStdString(nextVendorId);
+        }
+
         return;
     }
 }
@@ -274,13 +282,16 @@ void WaitlistController::notifyVendorsMovedUp(const std::string& marketDateId,
         Vendor* vendor = dynamic_cast<Vendor*>(user);
         if (!vendor) continue;
 
-        const int newPos = i + 1; // 1-based
-        std::string message =
+        const int newPos = i + 1;
+        const std::string message =
             "Your waitlist position for " + marketDateId +
             " is now " + std::to_string(newPos) + ".";
 
-        Notification notification(message);
-        vendor->addNotification(notification);
-        notificationRepository.addNotification(vendorId, message);
+        vendor->addNotification(Notification(message));
+
+        if (!notificationRepository.addNotification(vendorId, message)) {
+            qDebug() << "Position update notification could not be saved for vendor:"
+                     << QString::fromStdString(vendorId);
+        }
     }
 }
