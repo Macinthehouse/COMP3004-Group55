@@ -10,6 +10,7 @@
 #include "ComplianceDocumentRepository.h"
 #include "BookingRepository.h"
 #include "WaitlistRepository.h"
+#include "NotificationRepository.h"
 
 #include <vector>
 #include <utility>
@@ -213,6 +214,7 @@ bool InMemoryStorageManager::loadFromDatabase()
     ComplianceDocumentRepository complianceDocumentRepository;
     BookingRepository bookingRepository;
     WaitlistRepository waitlistRepository;
+    NotificationRepository notificationRepository;
 
     // 1. Load all users
     std::vector<std::unique_ptr<User>> loadedUsers = userRepository.loadAllUsers();
@@ -265,7 +267,22 @@ bool InMemoryStorageManager::loadFromDatabase()
         }
     }
 
-    // 6. Load bookings and attach them to both Vendor and MarketDate
+    // 6. Attach notifications to each vendor
+    for (auto& pair : users) {
+        Vendor* vendor = dynamic_cast<Vendor*>(pair.second.get());
+        if (!vendor) {
+            continue;
+        }
+
+        std::vector<Notification> notifications =
+            notificationRepository.loadNotificationsForVendor(vendor->getId());
+
+        for (const auto& notification : notifications) {
+            vendor->addNotification(notification);
+        }
+    }
+
+    // 7. Load bookings and attach them to both Vendor and MarketDate
     std::vector<Booking> bookings = bookingRepository.loadAllBookings();
     for (const auto& booking : bookings) {
         Vendor* vendor = getVendor(booking.getVendorId());
