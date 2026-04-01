@@ -4,12 +4,12 @@
 #include <vector>
 #include <string>
 
-#include "InMemoryStorageManager.h"
 #include "VendorCategory.h"
 #include "Notification.h"
 #include "Booking.h"
 #include "ComplianceDocument.h"
 
+class InMemoryStorageManager;
 
 struct WaitlistStatus {
     std::string marketDateId;  // "YYYY-MM-DD"
@@ -48,11 +48,10 @@ public:
     DashboardController(InMemoryStorageManager& storage);
 
     VendorDashboardData getVendorDashboard(const std::string& userId);
-
     std::vector<MarketDateSummary> listMarketDates();
 
 private:
     InMemoryStorageManager& storage;
 };
 
-#endif
+#endif // DASHBOARDCONTROLLER_H
