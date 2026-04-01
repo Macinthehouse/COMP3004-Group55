@@ -8,7 +8,11 @@
 #include "Booking.h"
 #include "Notification.h"
 
+#include "WaitlistRepository.h"
+#include "NotificationRepository.h"
+
 #include <string>
+#include <vector>
 
 // Constructor
 
@@ -22,7 +26,6 @@ WaitlistController::WaitlistController(InMemoryStorageManager& storageManager)
 WaitlistResult WaitlistController::joinWaitlist(const std::string& userId,
                                                 const std::string& marketDateId)
 {
-    // Retrieve User
     User* user = storage.getUser(userId);
     if (!user) {
         return { WaitlistResultType::NOT_FOUND,
@@ -30,7 +33,6 @@ WaitlistResult WaitlistController::joinWaitlist(const std::string& userId,
                  -1 };
     }
 
-    // Ensure user is Vendor
     Vendor* vendor = dynamic_cast<Vendor*>(user);
     if (!vendor) {
         return { WaitlistResultType::NOT_VENDOR,
@@ -72,22 +74,34 @@ WaitlistResult WaitlistController::joinWaitlist(const std::string& userId,
                  -1 };
     }
 
-    waitlist->enqueue(userId);
-    int position = waitlist->getPosition(userId);
+    Waitlist updatedWaitlist = *waitlist;
+    updatedWaitlist.enqueue(userId);
+    int position = updatedWaitlist.getPosition(userId);
 
-    Notification notification(
+    WaitlistRepository waitlistRepository;
+    if (!waitlistRepository.replaceWaitlist(updatedWaitlist)) {
+        return { WaitlistResultType::ERROR,
+                 "Failed to save waitlist to the database.",
+                 -1 };
+    }
+
+    *waitlist = updatedWaitlist;
+
+    std::string message =
         "You have been added to the waitlist for market date "
         + marketDateId +
-        ". Current position: " + std::to_string(position)
-    );
+        ". Current position: " + std::to_string(position);
 
+    Notification notification(message);
     vendor->addNotification(notification);
+
+    NotificationRepository notificationRepository;
+    notificationRepository.addNotification(userId, message);
 
     return { WaitlistResultType::SUCCESS,
              "Added to waitlist.",
              position };
 }
-
 
 // leaveWaitlist()
 
@@ -131,23 +145,35 @@ WaitlistResult WaitlistController::leaveWaitlist(const std::string& userId,
     }
 
     const int removedPos = waitlist->getPosition(userId); // 1-based
-    waitlist->remove(userId);
+
+    Waitlist updatedWaitlist = *waitlist;
+    updatedWaitlist.remove(userId);
+
+    WaitlistRepository waitlistRepository;
+    if (!waitlistRepository.replaceWaitlist(updatedWaitlist)) {
+        return { WaitlistResultType::ERROR,
+                 "Failed to update waitlist in the database.",
+                 -1 };
+    }
+
+    *waitlist = updatedWaitlist;
 
     // everyone who was behind removedPos moves up by 1
     notifyVendorsMovedUp(marketDateId, category, removedPos);
 
-    Notification notification(
-        "You have been removed from the waitlist for market date "
-        + marketDateId
-    );
+    std::string message =
+        "You have been removed from the waitlist for market date " + marketDateId;
 
+    Notification notification(message);
     vendor->addNotification(notification);
+
+    NotificationRepository notificationRepository;
+    notificationRepository.addNotification(userId, message);
 
     return { WaitlistResultType::SUCCESS,
              "Removed from waitlist.",
              -1 };
 }
-
 
 // handlePromotionIfNeeded()
 
@@ -162,6 +188,9 @@ void WaitlistController::handlePromotionIfNeeded(const std::string& marketDateId
     Waitlist* waitlist = storage.getWaitlist(marketDateId, category);
     if (!waitlist || waitlist->isEmpty()) return;
 
+    WaitlistRepository waitlistRepository;
+    NotificationRepository notificationRepository;
+
     // Find first eligible vendor at head of queue (skip invalid/stale entries)
     while (!waitlist->isEmpty()) {
         const std::string nextVendorId = waitlist->peekNextVendorId();
@@ -169,43 +198,59 @@ void WaitlistController::handlePromotionIfNeeded(const std::string& marketDateId
 
         User* user = storage.getUser(nextVendorId);
         Vendor* vendor = dynamic_cast<Vendor*>(user);
+
         if (!vendor) {
-            // stale entry; drop it and check next
-            waitlist->dequeue();
+            Waitlist updatedWaitlist = *waitlist;
+            updatedWaitlist.dequeue();
+
+            if (!waitlistRepository.replaceWaitlist(updatedWaitlist)) {
+                return;
+            }
+
+            *waitlist = updatedWaitlist;
             notifyVendorsMovedUp(marketDateId, category, 1);
             continue;
         }
 
-        if (vendor->hasBookingForDate(marketDateId)) {
-            // stale entry; already booked; drop it and check next
-            waitlist->dequeue();
+        // Skip vendors who already hold any active booking
+        if (!vendor->getBookings().empty()) {
+            Waitlist updatedWaitlist = *waitlist;
+            updatedWaitlist.dequeue();
+
+            if (!waitlistRepository.replaceWaitlist(updatedWaitlist)) {
+                return;
+            }
+
+            *waitlist = updatedWaitlist;
             notifyVendorsMovedUp(marketDateId, category, 1);
             continue;
         }
 
-        // Notify only (do not dequeue here)
-        Notification notification(
+        std::string message =
             "A stall is now available for " + marketDateId +
-            ". You are next in line—please book."
-        );
+            ". You are next in line—please book.";
+
+        Notification notification(message);
         vendor->addNotification(notification);
+        notificationRepository.addNotification(nextVendorId, message);
         return;
     }
 }
 
 // getWaitlistPosition()
-int WaitlistController::getWaitlistPosition(const std::string& userId, 
-                                            const std::string& marketDateId, 
-                                            VendorCategory category) {
-    // Get the waitlist object from storage
-    Waitlist* wl = storage.getWaitlist(marketDateId, category);
-    
-    // If it doesn't exist, the position is 0
-    if (!wl) return 0;
 
-    // This will return the 1-based index (1, 2, 3...) or 0 if not found.
+int WaitlistController::getWaitlistPosition(const std::string& userId,
+                                            const std::string& marketDateId,
+                                            VendorCategory category)
+{
+    Waitlist* wl = storage.getWaitlist(marketDateId, category);
+
+    if (!wl) return -1;
+
     return wl->getPosition(userId);
 }
+
+// notifyVendorsMovedUp()
 
 void WaitlistController::notifyVendorsMovedUp(const std::string& marketDateId,
                                               VendorCategory category,
@@ -220,20 +265,22 @@ void WaitlistController::notifyVendorsMovedUp(const std::string& marketDateId,
     const int startIdx = fromPosition1Based - 1;
     if (startIdx < 0 || startIdx >= static_cast<int>(q.size())) return;
 
-    for (int i = startIdx; i < static_cast<int>(q.size()); ++i) {
-        const std::string& vid = q[i];
+    NotificationRepository notificationRepository;
 
-        User* u = storage.getUser(vid);
-        Vendor* v = dynamic_cast<Vendor*>(u);
-        if (!v) continue;
+    for (int i = startIdx; i < static_cast<int>(q.size()); ++i) {
+        const std::string& vendorId = q[i];
+
+        User* user = storage.getUser(vendorId);
+        Vendor* vendor = dynamic_cast<Vendor*>(user);
+        if (!vendor) continue;
 
         const int newPos = i + 1; // 1-based
-        Notification n(
+        std::string message =
             "Your waitlist position for " + marketDateId +
-            " is now " + std::to_string(newPos) + "."
-        );
-        v->addNotification(n);
+            " is now " + std::to_string(newPos) + ".";
+
+        Notification notification(message);
+        vendor->addNotification(notification);
+        notificationRepository.addNotification(vendorId, message);
     }
 }
-
-
