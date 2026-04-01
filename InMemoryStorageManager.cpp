@@ -6,7 +6,7 @@
 #include "ComplianceDocument.h"
 
 #include "UserRepository.h"
-#include "MarketDateRepository.h"
+#include "MarketScheduleRepository.h"
 #include "ComplianceDocumentRepository.h"
 #include "BookingRepository.h"
 #include "WaitlistRepository.h"
@@ -209,7 +209,7 @@ bool InMemoryStorageManager::loadFromDatabase()
     clear();
 
     UserRepository userRepository;
-    MarketDateRepository marketDateRepository;
+    MarketScheduleRepository marketScheduleRepository;
     ComplianceDocumentRepository complianceDocumentRepository;
     BookingRepository bookingRepository;
     WaitlistRepository waitlistRepository;
@@ -221,7 +221,7 @@ bool InMemoryStorageManager::loadFromDatabase()
     }
 
     // 2. Load all market dates into MarketSchedule
-    std::vector<MarketDate> loadedDates = marketDateRepository.loadAllMarketDates();
+    std::vector<MarketDate> loadedDates = marketScheduleRepository.loadAllMarketDates();
     for (const auto& marketDate : loadedDates) {
         addMarketDate(marketDate);
     }
