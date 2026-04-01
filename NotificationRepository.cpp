@@ -26,7 +26,6 @@ std::vector<Notification> NotificationRepository::loadNotificationsForVendor(con
     }
 
     while (query.next()) {
-        // Adjust this constructor once Notification.h/.cpp is confirmed
         notifications.emplace_back(
             query.value("message").toString().toStdString()
         );
