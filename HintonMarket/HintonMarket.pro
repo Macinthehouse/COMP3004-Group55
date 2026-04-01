@@ -29,7 +29,7 @@ SOURCES += \
     ../UserRepository.cpp \
     ../BookingRepository.cpp \
     ../WaitlistRepository.cpp \
-    ../MarketDateRepository.cpp \
+    ../MarketScheduleRepository.cpp \
     ../ComplianceDocumentRepository.cpp \
     BookingDialog.cpp \
     MarketScheduleUI.cpp \
@@ -61,7 +61,7 @@ HEADERS += \
     ../UserRepository.h \
     ../BookingRepository.h \
     ../WaitlistRepository.h \
-    ../MarketDateRepository.h \
+    ../MarketScheduleRepository.h \
     ../ComplianceDocumentRepository.h \
     BookingDialog.h \
     MarketScheduleUI.h \
