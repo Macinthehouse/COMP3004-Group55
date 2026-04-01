@@ -27,10 +27,11 @@ struct BookingResult {
 };
 
 // BookingController
-
+//
 // Responsibilities:
-//     - Coordinates booking operations.
-//     - book/cancel stalls (Only Vendors are allowed to perform these).
+// - Coordinates booking operations
+// - Books/cancels stalls (only Vendors are allowed)
+// - Persists booking-related changes for D2
 
 class BookingController {
 public:
