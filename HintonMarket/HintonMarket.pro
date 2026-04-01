@@ -19,6 +19,7 @@ SOURCES += \
     ../MarketSchedule.cpp \
     ../MarketOperator.cpp \
     ../Notification.cpp \
+    ../NotificationRepository.cpp \
     ../SystemAdministrator.cpp \
     ../User.cpp \
     ../Vendor.cpp \
@@ -50,6 +51,7 @@ HEADERS += \
     ../MarketSchedule.h \
     ../MarketOperator.h \
     ../Notification.h \
+    ../NotificationRepository.h \
     ../SystemAdministrator.h \
     ../User.h \
     ../Vendor.h \
