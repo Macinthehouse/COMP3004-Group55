@@ -2,27 +2,37 @@
 
 #include <algorithm>
 
+#include "InMemoryStorageManager.h"
 #include "User.h"
 #include "Vendor.h"
 #include "MarketDate.h"
 #include "Waitlist.h"
 #include "ComplianceDocument.h"
 
-static std::string categoryToString(VendorCategory c) {
-    return (c == VendorCategory::FOOD) ? "Food" : "Artisan";
+namespace
+{
+    std::string categoryToString(VendorCategory category)
+    {
+        return (category == VendorCategory::FOOD) ? "Food" : "Artisan";
+    }
 }
 
 DashboardController::DashboardController(InMemoryStorageManager& storage)
-    : storage(storage) {}
+    : storage(storage)
+{
+}
 
-std::vector<MarketDateSummary> DashboardController::listMarketDates() {
+std::vector<MarketDateSummary> DashboardController::listMarketDates()
+{
     std::vector<MarketDateSummary> out;
 
     const auto dates = storage.getAllMarketDates();
     out.reserve(dates.size());
 
     for (MarketDate* md : dates) {
-        if (!md) continue;
+        if (!md) {
+            continue;
+        }
 
         MarketDateSummary row;
         row.marketDateId = md->getDate();
@@ -40,17 +50,18 @@ std::vector<MarketDateSummary> DashboardController::listMarketDates() {
     return out;
 }
 
-VendorDashboardData DashboardController::getVendorDashboard(const std::string& userId) {
+VendorDashboardData DashboardController::getVendorDashboard(const std::string& userId)
+{
     VendorDashboardData data;
 
     User* user = storage.getUser(userId);
     Vendor* vendor = dynamic_cast<Vendor*>(user);
 
     if (!vendor) {
-        return data; // empty
+        return data;
     }
 
-    // ---- Vendor summary (business info) ----
+    // Vendor summary
     data.vendor.vendorId = vendor->getId();
     data.vendor.businessName = vendor->getBusinessName();
     data.vendor.ownerName = vendor->getName();
@@ -59,27 +70,31 @@ VendorDashboardData DashboardController::getVendorDashboard(const std::string& u
     data.vendor.mailingAddress = vendor->getAddress();
     data.vendor.category = categoryToString(vendor->getCategory());
 
-    // ---- Existing dashboard sections ----
+    // Existing dashboard sections
     data.confirmedBookings = vendor->getBookings();
     data.notifications = vendor->getNotifications();
     data.complianceDocuments = vendor->getComplianceDocuments();
 
-    const VendorCategory cat = vendor->getCategory();
-
+    const VendorCategory category = vendor->getCategory();
     const auto dates = storage.getAllMarketDates();
+
     for (MarketDate* md : dates) {
-        if (!md) continue;
+        if (!md) {
+            continue;
+        }
 
         const std::string marketDateId = md->getDate();
-        Waitlist* wl = storage.getWaitlist(marketDateId, cat);
-        if (!wl) continue;
+        Waitlist* wl = storage.getWaitlist(marketDateId, category);
+        if (!wl) {
+            continue;
+        }
 
         if (wl->containsVendor(userId)) {
             WaitlistStatus ws;
             ws.marketDateId = marketDateId;
             ws.dateIso = marketDateId;
-            ws.position = wl->getPosition(userId); // 1-based
-            ws.category = categoryToString(cat);
+            ws.position = wl->getPosition(userId);
+            ws.category = categoryToString(category);
             data.activeWaitlists.push_back(ws);
         }
     }
