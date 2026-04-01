@@ -1,4 +1,4 @@
-#include "MarketDateRepository.h"
+#include "MarketScheduleRepository.h"
 #include "DatabaseManager.h"
 
 #include <QSqlQuery>
@@ -6,7 +6,7 @@
 #include <QVariant>
 #include <QDebug>
 
-std::unique_ptr<MarketDate> MarketDateRepository::findById(const std::string& id)
+std::unique_ptr<MarketDate> MarketScheduleRepository::findById(const std::string& id)
 {
     QSqlQuery query(DatabaseManager::instance().database());
     query.prepare(
@@ -17,7 +17,7 @@ std::unique_ptr<MarketDate> MarketDateRepository::findById(const std::string& id
     query.bindValue(":id", QString::fromStdString(id));
 
     if (!query.exec()) {
-        qDebug() << "MarketDateRepository::findById failed:" << query.lastError().text();
+        qDebug() << "MarketScheduleRepository::findById failed:" << query.lastError().text();
         return nullptr;
     }
 
@@ -32,7 +32,7 @@ std::unique_ptr<MarketDate> MarketDateRepository::findById(const std::string& id
     );
 }
 
-std::vector<MarketDate> MarketDateRepository::loadAllMarketDates()
+std::vector<MarketDate> MarketScheduleRepository::loadAllMarketDates()
 {
     std::vector<MarketDate> dates;
 
@@ -44,7 +44,7 @@ std::vector<MarketDate> MarketDateRepository::loadAllMarketDates()
     );
 
     if (!query.exec()) {
-        qDebug() << "MarketDateRepository::loadAllMarketDates failed:" << query.lastError().text();
+        qDebug() << "MarketScheduleRepository::loadAllMarketDates failed:" << query.lastError().text();
         return dates;
     }
 
