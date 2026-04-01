@@ -10,6 +10,10 @@
 #include "VendorCategory.h"
 #include "Waitlist.h"
 
+#include "BookingRepository.h"
+#include "WaitlistRepository.h"
+#include "NotificationRepository.h"
+
 // Constructor
 
 BookingController::BookingController(InMemoryStorageManager& storageManager,
@@ -19,15 +23,15 @@ BookingController::BookingController(InMemoryStorageManager& storageManager,
 {
 }
 
-std::vector<MarketDate*> BookingController::getAvailableMarketDates() {
-    // The Controller asks Storage for the list and hands it to the UI
-    return storage.getAllMarketDates(); 
+std::vector<MarketDate*> BookingController::getAvailableMarketDates()
+{
+    return storage.getAllMarketDates();
 }
 
 // bookStall()
 
 BookingResult BookingController::bookStall(const std::string& userId,
-                                          const std::string& marketDateId)
+                                           const std::string& marketDateId)
 {
     // Retrieve User
     User* user = storage.getUser(userId);
@@ -50,21 +54,21 @@ BookingResult BookingController::bookStall(const std::string& userId,
                  "Market date not found." };
     }
 
-    // Prevent duplicate booking
-    if (vendor->hasBookingForDate(marketDateId)) {
+    // Enforce one active booking total, not just same-date duplicate
+    if (!vendor->getBookings().empty()) {
         return { BookingResultType::ALREADY_BOOKED,
-                 "Vendor already has a booking for this date." };
+                 "Vendor already has an active booking." };
     }
 
-    // Check stall availability
     VendorCategory category = vendor->getCategory();
 
+    // Check stall availability
     if (!marketDate->hasAvailableStall(category)) {
         return { BookingResultType::MARKET_FULL,
                  "No stalls available for this category." };
     }
 
-    // Enforce waitlist priority (if a waitlist exists and is non-empty)
+    // Enforce waitlist priority
     Waitlist* wl = storage.getWaitlist(marketDateId, category);
     if (wl && !wl->isEmpty()) {
         const std::string headId = wl->peekNextVendorId();
@@ -75,23 +79,45 @@ BookingResult BookingController::bookStall(const std::string& userId,
         }
     }
 
-    // Create booking
     Booking booking(userId, marketDateId, category);
 
-    marketDate->addBooking(booking);
-    vendor->addBooking(booking);
+    BookingRepository bookingRepository;
+    WaitlistRepository waitlistRepository;
+    NotificationRepository notificationRepository;
 
-    // If this vendor was next-in-line, remove them from the waitlist now
+    // Persist booking first
+    if (!bookingRepository.createBooking(booking)) {
+        return { BookingResultType::ERROR,
+                 "Failed to save booking to the database." };
+    }
+
+    // If this vendor was next-in-line, persist waitlist update
     if (wl && !wl->isEmpty() && wl->peekNextVendorId() == userId) {
-        wl->dequeue();
+        Waitlist updatedWaitlist = *wl;
+        updatedWaitlist.dequeue();
+
+        if (!waitlistRepository.replaceWaitlist(updatedWaitlist)) {
+            return { BookingResultType::ERROR,
+                     "Failed to update waitlist in the database." };
+        }
+
+        *wl = updatedWaitlist;
         waitlistController.notifyVendorsMovedUp(marketDateId, category, 1);
     }
 
-    // Confirmation notification
-    Notification notification(
-        "Booking confirmed for market date " + marketDateId
-    );
-    vendor->addNotification(notification);
+    // Persist notification
+    const std::string notificationMessage =
+        "Booking confirmed for market date " + marketDateId;
+
+    if (!notificationRepository.addNotification(userId, notificationMessage)) {
+        return { BookingResultType::ERROR,
+                 "Failed to save booking notification to the database." };
+    }
+
+    // Update in-memory state
+    marketDate->addBooking(booking);
+    vendor->addBooking(booking);
+    vendor->addNotification(Notification(notificationMessage));
 
     return { BookingResultType::SUCCESS,
              "Booking successful." };
@@ -129,20 +155,32 @@ BookingResult BookingController::cancelBooking(const std::string& userId,
                  "No booking found for this date." };
     }
 
-    VendorCategory category = vendor->getCategory();
+    BookingRepository bookingRepository;
+    NotificationRepository notificationRepository;
 
-    // Remove booking
+    // Persist booking removal first
+    if (!bookingRepository.removeBooking(userId, marketDateId)) {
+        return { BookingResultType::ERROR,
+                 "Failed to remove booking from the database." };
+    }
+
+    const VendorCategory category = vendor->getCategory();
+
+    // Persist notification
+    const std::string notificationMessage =
+        "Booking cancelled for market date " + marketDateId;
+
+    if (!notificationRepository.addNotification(userId, notificationMessage)) {
+        return { BookingResultType::ERROR,
+                 "Failed to save cancellation notification to the database." };
+    }
+
+    // Update in-memory state
     marketDate->removeBooking(userId);
     vendor->removeBooking(marketDateId);
+    vendor->addNotification(Notification(notificationMessage));
 
-    // Cancellation notification
-    Notification notification(
-        "Booking cancelled for market date " + marketDateId
-    );
-
-    vendor->addNotification(notification);
-
-    // Trigger automatic waitlist promotion
+    // Trigger waitlist promotion logic
     waitlistController.handlePromotionIfNeeded(marketDateId, category);
 
     return { BookingResultType::SUCCESS,
