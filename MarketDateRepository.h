@@ -1,6 +1,7 @@
 #ifndef MARKETDATEREPOSITORY_H
 #define MARKETDATEREPOSITORY_H
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -9,7 +10,7 @@
 class MarketDateRepository
 {
 public:
-    MarketDate* findById(const std::string& id);
+    std::unique_ptr<MarketDate> findById(const std::string& id);
     std::vector<MarketDate> loadAllMarketDates();
 };
 
