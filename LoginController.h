@@ -8,9 +8,9 @@
 class LoginController {
 public:
     LoginController(InMemoryStorageManager* storage);
-    
-    // The UI calls this to verify a user
-  User* login(const std::string& userId);
+
+    // The UI calls this to verify a user by ID
+    User* login(const std::string& userId);
 
 private:
     InMemoryStorageManager* storage;
