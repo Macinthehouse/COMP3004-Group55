@@ -14,7 +14,8 @@ std::vector<ComplianceDocument> ComplianceDocumentRepository::loadDocumentsForVe
     query.prepare(
         "SELECT document_type, document_number, expiry_date, legal_text "
         "FROM compliance_documents "
-        "WHERE vendor_id = :vendor_id"
+        "WHERE vendor_id = :vendor_id "
+        "ORDER BY id"
     );
     query.bindValue(":vendor_id", QString::fromStdString(vendorId));
 
