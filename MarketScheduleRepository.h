@@ -1,5 +1,5 @@
-#ifndef MARKETDATEREPOSITORY_H
-#define MARKETDATEREPOSITORY_H
+#ifndef MARKETSCHEDULEREPOSITORY_H
+#define MARKETSCHEDULEREPOSITORY_H
 
 #include <memory>
 #include <string>
@@ -7,11 +7,11 @@
 
 #include "MarketDate.h"
 
-class MarketDateRepository
+class MarketScheduleRepository
 {
 public:
     std::unique_ptr<MarketDate> findById(const std::string& id);
     std::vector<MarketDate> loadAllMarketDates();
 };
 
-#endif // MARKETDATEREPOSITORY_H
+#endif // MARKETSCHEDULEREPOSITORY_H
