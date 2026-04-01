@@ -6,7 +6,7 @@
 #include <QVariant>
 #include <QDebug>
 
-MarketDate* MarketDateRepository::findById(const std::string& id)
+std::unique_ptr<MarketDate> MarketDateRepository::findById(const std::string& id)
 {
     QSqlQuery query(DatabaseManager::instance().database());
     query.prepare(
@@ -25,7 +25,7 @@ MarketDate* MarketDateRepository::findById(const std::string& id)
         return nullptr;
     }
 
-    return new MarketDate(
+    return std::make_unique<MarketDate>(
         query.value("id").toString().toStdString(),
         query.value("food_capacity").toInt(),
         query.value("artisan_capacity").toInt()
