@@ -9,6 +9,11 @@
 
 namespace
 {
+    QString categoryToQString(VendorCategory category)
+    {
+        return (category == VendorCategory::ARTISAN) ? "ARTISAN" : "FOOD";
+    }
+
     VendorCategory parseVendorCategory(const QString& categoryText)
     {
         const QString normalized = categoryText.trimmed().toUpper();
@@ -52,4 +57,44 @@ std::vector<Booking> BookingRepository::loadAllBookings()
     }
 
     return bookings;
+}
+
+bool BookingRepository::createBooking(const Booking& booking)
+{
+    QSqlQuery query(DatabaseManager::instance().database());
+    query.prepare(
+        "INSERT INTO bookings (vendor_id, market_date_id) "
+        "VALUES (:vendor_id, :market_date_id)"
+    );
+
+    query.bindValue(":vendor_id", QString::fromStdString(booking.getVendorId()));
+    query.bindValue(":market_date_id", QString::fromStdString(booking.getMarketDateId()));
+
+    if (!query.exec()) {
+        qDebug() << "BookingRepository::createBooking failed:" << query.lastError().text();
+        return false;
+    }
+
+    return true;
+}
+
+bool BookingRepository::removeBooking(const std::string& vendorId,
+                                      const std::string& marketDateId)
+{
+    QSqlQuery query(DatabaseManager::instance().database());
+    query.prepare(
+        "DELETE FROM bookings "
+        "WHERE vendor_id = :vendor_id "
+        "AND market_date_id = :market_date_id"
+    );
+
+    query.bindValue(":vendor_id", QString::fromStdString(vendorId));
+    query.bindValue(":market_date_id", QString::fromStdString(marketDateId));
+
+    if (!query.exec()) {
+        qDebug() << "BookingRepository::removeBooking failed:" << query.lastError().text();
+        return false;
+    }
+
+    return true;
 }
