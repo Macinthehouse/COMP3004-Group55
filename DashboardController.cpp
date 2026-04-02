@@ -50,6 +50,11 @@ std::vector<MarketDateSummary> DashboardController::listMarketDates()
     return out;
 }
 
+/**
+ * Prepares the complete data set required for the VendorDashboardUI.
+ * * This method demonstrates high cohesion by focusing solely on 
+ * data aggregation for the presentation layer.
+ */
 VendorDashboardData DashboardController::getVendorDashboard(const std::string& userId)
 {
     VendorDashboardData data;
@@ -78,6 +83,8 @@ VendorDashboardData DashboardController::getVendorDashboard(const std::string& u
     const VendorCategory category = vendor->getCategory();
     const auto dates = storage.getAllMarketDates();
 
+    // Calculate waitlist positions for the vendor across all market dates.
+    // This allows the UI to show "Position: 2" directly to the user.
     for (MarketDate* md : dates) {
         if (!md) {
             continue;

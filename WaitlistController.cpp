@@ -53,7 +53,7 @@ WaitlistResult WaitlistController::joinWaitlist(const std::string& userId,
     // Keep this consistent with BookingController and D2
     if (!vendor->getBookings().empty()) {
         return { WaitlistResultType::ALREADY_BOOKED,
-                 "Vendor already has an active booking.",
+                 "Vendor already has an active booking and cannot join waitlists.",
                  -1 };
     }
 
@@ -274,7 +274,8 @@ void WaitlistController::notifyVendorsMovedUp(const std::string& marketDateId,
     if (startIdx < 0 || startIdx >= static_cast<int>(q.size())) return;
 
     NotificationRepository notificationRepository;
-
+    
+    // Notify all vendors who moved up
     for (int i = startIdx; i < static_cast<int>(q.size()); ++i) {
         const std::string& vendorId = q[i];
 

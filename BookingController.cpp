@@ -16,7 +16,7 @@
 
 #include <QDebug>
 
-// Constructor
+// ... (Constructor and getAvailableMarketDates remain same) ...
 
 BookingController::BookingController(InMemoryStorageManager& storageManager,
                                      WaitlistController& waitlistCtrl)
@@ -30,11 +30,16 @@ std::vector<MarketDate*> BookingController::getAvailableMarketDates()
     return storage.getAllMarketDates();
 }
 
-// bookStall()
-
+/**
+ * Orchestrates the booking of a market stall.
+ * * This method enforces the D2 "One Active Booking" rule and handles 
+ * the SQLite persistence mapping for the relational 'bookings' table.
+ */
 BookingResult BookingController::bookStall(const std::string& userId,
                                            const std::string& marketDateId)
 {
+    // Validation Logic
+    // Checks if the user exists, is a vendor, and if the date is valid.
     User* user = storage.getUser(userId);
     if (!user) {
         return { BookingResultType::INVALID_USER,
@@ -76,6 +81,8 @@ BookingResult BookingController::bookStall(const std::string& userId,
         }
     }
 
+    // Persistence Layer (Relational Storage)
+    // D2 Requirement: Every database query must result in a corresponding object in memory.
     Booking booking(userId, marketDateId, category);
 
     BookingRepository bookingRepository;
@@ -128,8 +135,9 @@ BookingResult BookingController::bookStall(const std::string& userId,
              "Booking successful." };
 }
 
-// cancelBooking()
-
+/**
+ * Handles stall cancellation and triggers the FIFO promotion sequence.
+ */
 BookingResult BookingController::cancelBooking(const std::string& userId,
                                                const std::string& marketDateId)
 {
@@ -159,13 +167,13 @@ BookingResult BookingController::cancelBooking(const std::string& userId,
     BookingRepository bookingRepository;
     NotificationRepository notificationRepository;
 
-    // 1. Persist booking removal
+    // 1. Persist removal to SQLite to ensure data is not lost on restart.
     if (!bookingRepository.removeBooking(userId, marketDateId)) {
         return { BookingResultType::ERROR,
                  "Failed to remove booking from the database." };
     }
 
-    // 2. Update in-memory state
+    // 2. Update In-Memory state (Object Mapping).
     marketDate->removeBooking(userId);
     vendor->removeBooking(marketDateId);
 
@@ -182,6 +190,8 @@ BookingResult BookingController::cancelBooking(const std::string& userId,
 
     // 4. Trigger waitlist promotion logic
     const VendorCategory category = vendor->getCategory();
+    // FIFO TRIGGER: D2 requires that when a stall opens, the next vendor 
+    // in the waitlist is notified.
     waitlistController.handlePromotionIfNeeded(marketDateId, category);
 
     return { BookingResultType::SUCCESS,
