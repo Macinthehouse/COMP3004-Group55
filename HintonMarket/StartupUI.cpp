@@ -9,7 +9,7 @@
 #include <QVBoxLayout>
 
 StartupUI::StartupUI(QWidget* parent) : QWidget(parent) {
-    auto* title = new QLabel(tr("HintonMarket (Deliverable 1)"));
+    auto* title = new QLabel(tr("HintonMarket"));
     QFont f = title->font();
     f.setPointSize(f.pointSize() + 4);
     f.setBold(true);
