@@ -97,4 +97,6 @@ DISTFILES += \
 DB_FILE = $$PWD/hintonMarket.sqlite3
 DB_DEST = $$OUT_PWD/hintonMarket.sqlite3
 
-QMAKE_POST_LINK += $$quote($$QMAKE_COPY $$DB_FILE $$DB_DEST) $$escape_expand(\\n\\t)
+!equals(OUT_PWD, PWD) {
+    QMAKE_POST_LINK += $$quote($$QMAKE_COPY $$DB_FILE $$DB_DEST) $$escape_expand(\\n\\t)
+}
