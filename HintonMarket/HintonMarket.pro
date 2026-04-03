@@ -94,9 +94,10 @@ DISTFILES += \
     hintonMarket.sqlite3
 
 # D2 SQLite DB deployment
-DB_FILE = $$PWD/hintonMarket.sqlite3
+PRO_DIR = $$_PRO_FILE_PWD_
+DB_FILE = $$PRO_DIR/hintonMarket.sqlite3
 DB_DEST = $$OUT_PWD/hintonMarket.sqlite3
 
-!equals(OUT_PWD, PWD) {
+!equals(OUT_PWD, $$PRO_DIR) {
     QMAKE_POST_LINK += $$quote($$QMAKE_COPY $$DB_FILE $$DB_DEST) $$escape_expand(\\n\\t)
 }
