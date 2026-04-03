@@ -92,7 +92,7 @@ MainWindow::MainWindow(QWidget *parent)
             QMessageBox::information(
                 this,
                 tr("Login"),
-                tr("Welcome, System Administrator.\n\nSystem Administrator features are not implemented in Deliverable 1.")
+                tr("Welcome, System Administrator.\n\nSystem Administrator features are not implemented in Deliverable 2.")
             );
             return;
         }
@@ -101,7 +101,7 @@ MainWindow::MainWindow(QWidget *parent)
         QMessageBox::information(
             this,
             tr("Login"),
-            tr("Welcome.\n\nThis role’s features are not implemented in Deliverable 1.")
+            tr("Welcome.\n\nThis role’s features are not implemented in Deliverable 2.")
         );
     });
 
