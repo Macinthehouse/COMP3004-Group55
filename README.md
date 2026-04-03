@@ -1,5 +1,5 @@
 # Hinton Market Stall Booking System  
-## COMP3004 — Deliverable 1  
+## COMP3004 — Deliverable 2 
 **Team Number:** 55  
 
 ### Team Members
@@ -14,15 +14,18 @@
 
 This application is a Qt-based market stall booking and waitlist management system developed for the Hinton Market.
 
-The system allows different types of users to log in and perform tasks such as booking stalls, joining waitlists, viewing dashboards, and managing compliance information.
+The system allows different types of users to log in and perform tasks such as booking stalls, joining waitlists, viewing dashboards, managing bookings and waitlists as a market operator and viewing compliance information.
 
-The system uses an in-memory storage manager and runs locally without requiring any external libraries or environment setup.
+Deliverable 2 extends the Deliverable 1 prototype by adding **SQLite persistence**.  
+Application data is stored in a local SQLite database and reloaded when the application is reopened.
 
 ---
 
 ## System Requirements
 
-- Qt Creator (course VM version)  
+- Qt Creator (course VM version)
+- Qt with qmake support
+- SQLite support available through Qt
 - No additional libraries required  
 - No environment configuration required  
 
@@ -31,7 +34,9 @@ The system uses an in-memory storage manager and runs locally without requiring 
 ## Installation Instructions
 
 1. Extract the submission zip file.  
-2. Ensure the extracted folder structure remains unchanged.  
+2. Ensure the extracted folder structure remains unchanged.
+3. Ensure the SQLite file remains in the `HintonMarket` folder:
+   - `HintonMarket/hintonMarket.sqlite3`
 
 ---
 
@@ -110,7 +115,8 @@ No password is required for login.
 ## Submission Contents
 
 - All source code files (.cpp and .h)  
-- Qt project file (`HintonMarket/HintonMarket.pro`)  
+- Qt project file (`HintonMarket/HintonMarket.pro`)
+- SQLite database file: `HintonMarket/hintonMarket.sqlite3` 
 - README containing setup and testing instructions  
 - System Decomposition Diagram (PDF)
 
