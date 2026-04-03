@@ -77,6 +77,7 @@ To run the application:
 **OR**  
 - Press **Ctrl + R**
 
+**Terminal launch:**
 ```bash
 cd HintonMarket
 ./HintonMarket
