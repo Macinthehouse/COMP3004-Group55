@@ -25,11 +25,11 @@ std::unique_ptr<MarketDate> MarketScheduleRepository::findById(const std::string
         return nullptr;
     }
 
-    return std::make_unique<MarketDate>(
+    return std::unique_ptr<MarketDate>(new MarketDate(
         query.value("id").toString().toStdString(),
         query.value("food_capacity").toInt(),
         query.value("artisan_capacity").toInt()
-    );
+    ));
 }
 
 std::vector<MarketDate> MarketScheduleRepository::loadAllMarketDates()

@@ -21,6 +21,8 @@ class LoginController;
 class DashboardController;
 class WaitlistController;
 class BookingController;
+class MarketOperatorDashboardUI;
+class MarketOperatorController;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -36,6 +38,7 @@ private:
     void showSchedule();
     void refreshDashboard();
     void refreshSchedule();
+    void showOperatorDashboard();
 
     QStackedWidget* m_stack{};
     StartupUI* m_startup{};
@@ -49,6 +52,9 @@ private:
     DashboardController* m_dashboardController{};
     WaitlistController* m_waitlistController{};
     BookingController* m_bookingController{};
+    MarketOperatorDashboardUI* m_operatorDashboard{};
+    MarketOperatorController* m_operatorController{};
+
 };
 
 #endif // MAINWINDOW_H

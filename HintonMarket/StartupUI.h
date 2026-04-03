@@ -2,6 +2,7 @@
 #define STARTUPUI_H
 
 #include <QWidget>
+#include <QString>
 
 class QLineEdit;
 class QPushButton;
@@ -11,15 +12,16 @@ class StartupUI : public QWidget {
 public:
     explicit StartupUI(QWidget* parent = nullptr);
 
-    QString userId() const;
-void setUserId(const QString& text);
-QLineEdit* m_userIdEdit{};
+    QString username() const;
+    void setUsername(const QString& text);
+    void clear();
+
 signals:
-    void loginRequested(const QString& userId);
+    void loginRequested(const QString& username);
 
 private:
     QLineEdit* m_usernameEdit{};
     QPushButton* m_loginBtn{};
 };
 
-#endif
+#endif // STARTUPUI_H

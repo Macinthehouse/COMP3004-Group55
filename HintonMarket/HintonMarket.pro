@@ -16,6 +16,7 @@ SOURCES += \
     ../InMemoryStorageManager.cpp \
     ../LoginController.cpp \
     ../MarketDate.cpp \
+    ../MarketOperatorController.cpp \
     ../MarketSchedule.cpp \
     ../MarketOperator.cpp \
     ../Notification.cpp \
@@ -33,7 +34,11 @@ SOURCES += \
     ../MarketScheduleRepository.cpp \
     ../ComplianceDocumentRepository.cpp \
     BookingDialog.cpp \
+    MarketOperatorDashboardUI.cpp \
     MarketScheduleUI.cpp \
+    OperatorBookingDialog.cpp \
+    OperatorCancellationDialog.cpp \
+    OperatorWaitlistRemovalDialog.cpp \
     StartupUI.cpp \
     VendorDashboardUI.cpp \
     WaitlistDialog.cpp \
@@ -48,6 +53,7 @@ HEADERS += \
     ../InMemoryStorageManager.h \
     ../LoginController.h \
     ../MarketDate.h \
+    ../MarketOperatorController.h \
     ../MarketSchedule.h \
     ../MarketOperator.h \
     ../Notification.h \
@@ -66,7 +72,11 @@ HEADERS += \
     ../MarketScheduleRepository.h \
     ../ComplianceDocumentRepository.h \
     BookingDialog.h \
+    MarketOperatorDashboardUI.h \
     MarketScheduleUI.h \
+    OperatorBookingDialog.h \
+    OperatorCancellationDialog.h \
+    OperatorWaitlistRemovalDialog.h \
     StartupUI.h \
     VendorDashboardUI.h \
     WaitlistDialog.h \
@@ -79,3 +89,12 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    hintonMarket.sqlite3
+
+# D2 SQLite DB deployment
+DB_FILE = $$PWD/hintonMarket.sqlite3
+DB_DEST = $$OUT_PWD/hintonMarket.sqlite3
+
+QMAKE_POST_LINK += $$quote($$QMAKE_COPY $$DB_FILE $$DB_DEST) $$escape_expand(\\n\\t)

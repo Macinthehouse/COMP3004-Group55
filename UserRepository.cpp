@@ -39,7 +39,7 @@ namespace
             VendorCategory category =
                 parseVendorCategory(query.value("vendor_category").toString());
 
-            return std::make_unique<Vendor>(
+            return std::unique_ptr<User>(new Vendor(
                 id,
                 name,   // ownerName
                 email,
@@ -47,27 +47,27 @@ namespace
                 address,
                 businessName,
                 category
-            );
+            ));
         }
 
         if (role == "MarketOperator") {
-            return std::make_unique<MarketOperator>(
+            return std::unique_ptr<User>(new MarketOperator(
                 id,
                 name,
                 email,
                 phone,
                 address
-            );
+            ));
         }
 
         if (role == "SystemAdministrator") {
-            return std::make_unique<SystemAdministrator>(
+            return std::unique_ptr<User>(new SystemAdministrator(
                 id,
                 name,
                 email,
                 phone,
                 address
-            );
+            ));
         }
 
         qDebug() << "Unknown role found in users table:" << role;
